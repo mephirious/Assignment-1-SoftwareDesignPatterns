@@ -1,15 +1,16 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import java.util.Random;
+
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        System.out.println("Hello World!");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        Random rand = new Random();
+        Mage ilya = new Mage("Exoneges", 20, rand.nextInt(40), rand.nextInt(6)+3, 100);
+        Warrior nursultan = new Warrior("mephirious", 30, rand.nextInt(70), rand.nextInt(4)+1, 3);
+
+        Battle battle = new Battle(nursultan, ilya);
+        battle.printResults();
+        battle.start();
+        battle.printResults();
     }
 }
