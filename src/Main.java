@@ -3,17 +3,13 @@ import discounts.NoDiscountPolicy;
 import discounts.PremiumDiscountPolicy;
 import products.Phone;
 import products.Product;
-import cart.*;
-import discounts.DiscountPolicy;
+import cart.CartTotalCalculator;
+import discounts.DiscountService;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Создаем продукты
         Phone iphoneX = new Phone(
                 "IPhone X",
                 new BigDecimal("100.00"),
@@ -37,7 +33,6 @@ public class Main {
                 "XL white shirt"
         );
 
-        // Создаем клиентов
         Customer nurislam = new Customer(
                 "Nurislam",
                 new BigDecimal("1000.00"),
@@ -50,18 +45,17 @@ public class Main {
                 new PremiumDiscountPolicy()
         );
 
-        CartTotalCalculator calculator = new CartTotalCalculator();
+        DiscountService discountService = new DiscountService();
+        CartTotalCalculator calculator = new CartTotalCalculator(discountService);
 
-        System.out.println(calculator.calculateTotal(nurislam));
         nurislam.getCart().addProduct(book);
         nurislam.getCart().addProduct(iphoneX);
         nurislam.getCart().addProduct(shirt);
-        nurislam.getCart().addProduct(book);
-        System.out.println(calculator.calculateTotal(nurislam));
 
-        System.out.println(calculator.calculateTotal(adai));
         adai.getCart().addProduct(shirt);
         adai.getCart().addProduct(book);
-        System.out.println(calculator.calculateTotal(adai));
+
+        System.out.println("Total for Nurislam: " + calculator.calculateTotal(nurislam.getCart(), nurislam.getDiscountPolicy()));
+        System.out.println("Total for Adai: " + calculator.calculateTotal(adai.getCart(), adai.getDiscountPolicy()));
     }
 }

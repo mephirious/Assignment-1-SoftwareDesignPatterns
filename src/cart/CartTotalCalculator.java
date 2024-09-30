@@ -1,23 +1,25 @@
 package cart;
 
-import customer.Customer;
 import products.Product;
-import discounts.*;
+import discounts.DiscountService;
+import discounts.DiscountPolicy;
 
 import java.math.BigDecimal;
 
 public class CartTotalCalculator {
-    public BigDecimal calculateTotal(Customer customer) {
-        Cart cart = customer.getCart();
+    private final DiscountService discountService;
+
+    public CartTotalCalculator(DiscountService discountService) {
+        this.discountService = discountService;
+    }
+
+    public BigDecimal calculateTotal(Cart cart, DiscountPolicy discountPolicy) {
         BigDecimal total = BigDecimal.ZERO;
 
         for (Product product : cart.getProducts()) {
             total = total.add(product.getPrice());
         }
 
-        DiscountPolicy customerDiscount = customer.getDiscountPolicy();
-        total = customerDiscount.applyDiscount(total);
-
-        return total;
+        return discountService.applyDiscount(total, discountPolicy);
     }
 }
