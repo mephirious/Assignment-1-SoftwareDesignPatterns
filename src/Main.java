@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 
 public class Main {
     public static void main(String[] args) {
+        // main function just for example:
+        
         Phone iphoneX = new Phone(
                 "IPhone X",
                 new BigDecimal("100.00"),
