@@ -1,3 +1,7 @@
+package cart;
+
+import products.Product;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,13 +25,3 @@ public class Cart {
     }
 }
 
-class CartTotalCalculator {
-    public BigDecimal calculateTotal(Cart cart) {
-        BigDecimal total = BigDecimal.ZERO;
-        for (Product product : cart.getProducts()) {
-            total = total.add(product.getPrice());
-        }
-
-        return total;
-    }
-}

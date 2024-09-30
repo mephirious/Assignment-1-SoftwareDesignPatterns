@@ -1,3 +1,5 @@
+package products;
+
 import java.math.BigDecimal;
 
 abstract class Electronics extends Product {

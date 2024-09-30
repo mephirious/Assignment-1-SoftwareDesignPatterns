@@ -1,6 +1,8 @@
+package products;
+
 import java.math.BigDecimal;
 
-abstract class Product {
+public class Product {
     private String name;
     private BigDecimal price;
     private String category;
@@ -47,6 +49,5 @@ abstract class Product {
     public void setDescription(String description) {
         this.description = description;
     }
-
 }
 

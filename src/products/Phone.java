@@ -1,3 +1,5 @@
+package products;
+
 import java.math.BigDecimal;
 
 public class Phone extends Electronics {
