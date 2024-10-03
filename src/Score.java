@@ -3,6 +3,8 @@ public class Score {
     private static Score instance;
     private int data;
 
+    private Score() {};
+
     private Score(int data) {
         this.data = data;
     }
