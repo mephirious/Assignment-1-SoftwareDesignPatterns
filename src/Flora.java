@@ -1,4 +1,4 @@
-public abstract class Flora {
+/*public abstract class Flora {
     public abstract Plant createPlant();
     public abstract Mushroom createMushroom();
 }
@@ -21,4 +21,4 @@ class ProducingFactory extends Flora{
     public Mushroom createMushroom() {
         return new ProducingMushroom();
     }
-}
+}*/
