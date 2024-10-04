@@ -1,4 +1,11 @@
-public class Cooldown {
+interface ICooldown {
+    public boolean isReady();
+    public void trigger();
+    public void reset();
+}
+
+
+public class Cooldown implements ICooldown {
     private final long cooldownDuration; // In milliseconds
     private long lastActionTime; // The time when the last action was performed
 
