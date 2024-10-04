@@ -18,9 +18,9 @@ public class GameBoard implements IGameBoard {
         this.braindead = false;
     }
 
-    public void addEntity(EntityActions entity) { this.entities.add(entity); }
+    public void addEntity(EntityActions entity) { entities.add(entity); }
     public void addProjectile(Projectile projectile) {
-        this.projectiles.add(projectile);
+        projectiles.add(projectile);
     }
 
     // TODO: need to separate shooting, movement, etc .
@@ -32,9 +32,7 @@ public class GameBoard implements IGameBoard {
                 this.braindead = true;
             }
         }
-
         updateProjectiles();
-
         return !this.braindead;
     }
 
