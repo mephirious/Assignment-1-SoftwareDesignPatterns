@@ -1,17 +1,8 @@
-// Main class
 public class Main {
     public static void main(String[] args) {
         // Example projectile for the PeaShooter
-        Projectile peaProjectile = new Projectile(0, 0, 1, 0, 5, 5);
-
         // Using the Builder Pattern to create a PeaShooter entity
-        Plant peaShooter = (new Plant.Builder()
-                .setName("Pea Shooter")
-                .setDescription("A plant that shoots peas")
-                .setHealth(300)
-                .setDamage(20)
-                .setProjectile(peaProjectile)
-                .build());
+        Plant peaShooter = Plant.Director.constructPeaShooter();
 
         Game game = Game.getInstance();
 

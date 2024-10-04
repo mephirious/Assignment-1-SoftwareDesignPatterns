@@ -80,4 +80,16 @@ public class Plant extends EntityActions {
         }
     }
 
+    public static class Director {
+        public static Plant constructPeaShooter() {
+            Projectile peaProjectile = new Projectile(0, 0, 1, 0, 5, 5);
+            return (new Builder()
+                    .setName("Pea Shooter")
+                    .setDescription("A plant that shoots peas")
+                    .setHealth(300)
+                    .setDamage(20)
+                    .setProjectile(peaProjectile)
+                    .build());
+        }
+    }
 }
