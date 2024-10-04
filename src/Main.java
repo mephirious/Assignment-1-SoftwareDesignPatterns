@@ -5,20 +5,18 @@ public class Main {
         Projectile peaProjectile = new Projectile(0, 0, 1, 0, 5, 5);
 
         // Using the Builder Pattern to create a PeaShooter entity
-        Entity peaShooter = new Plant.Builder()
-                .setName("Pea Shooter")
-                .setDescription("A plant that shoots peas")
-                .setHealth(300)
-                .setDamage(20)
-                .setProjectile(peaProjectile)
-                .build();
-
+        Plant peaShooter = (new Plant.Builder()
+            .setName("Pea Shooter")
+            .setDescription("A plant that shoots peas")
+            .setHealth(300)
+            .setDamage(20)
+            .setProjectile(peaProjectile)
+            .build());
 
         Game game = Game.getInstance();
 
-
         // TODO: GameBoard Generator, ex Sun value, Plants to plant(with planting cooldown), PlantingGrid(where plants are placed and zombies moving), zombiesPre-Spawning area
-        game.createGameBoard();
+        game.createGameSession();
 
         try {
             game.startGameplay();
@@ -27,6 +25,6 @@ public class Main {
         }
 
         // Now you can use your peaShooter object
-        System.out.println("222Created entity: " + peaShooter.getName());
+        System.out.println("Created entity: " + peaShooter.getName());
     }
 }

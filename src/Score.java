@@ -1,4 +1,9 @@
-public class Score {
+interface IScore {
+    void addScore(int value);
+    int getScore();
+}
+
+public class Score implements IScore {
     private static Score instance;
     private int data;
 

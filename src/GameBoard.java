@@ -2,7 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-public class GameBoard {
+interface IGameBoard {
+    void addEntity(Entity entity);
+    void addProjectile(Projectile projectile);
+}
+
+public class GameBoard implements IGameBoard {
     private final List<Entity> entities;
     private final List<Projectile> projectiles;
     private boolean braindead;
@@ -13,9 +18,7 @@ public class GameBoard {
         this.braindead = false;
     }
 
-    public void addEntity(Entity entity) {
-        this.entities.add(entity);
-    }
+    public void addEntity(Entity entity) { this.entities.add(entity); }
     public void addProjectile(Projectile projectile) {
         this.projectiles.add(projectile);
     }

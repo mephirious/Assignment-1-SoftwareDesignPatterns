@@ -1,4 +1,9 @@
-public abstract class Entity extends Container {
+interface Actions {
+    Projectile attack();
+    void update(GameBoard gameBoard);
+}
+
+public abstract class Entity extends Container implements Actions {
     private String name;
     private String description;
     private int health;

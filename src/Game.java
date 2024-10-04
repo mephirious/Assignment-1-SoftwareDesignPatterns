@@ -1,11 +1,18 @@
+interface IGame {
+    void createGameSession();
+    void startGameplay();
+}
+
 public class Game {
     private static Game instance;
     private GameBoard gameBoard;
     private int level;
     private int tickNumber;
 
-    private static final int TICK_RATE_MS = 50; // Tick every 50 milliseconds (20 FPS)
-    private volatile boolean isRunning = true; // Can use this to stop the loop externally
+    // Tick every 50 milliseconds (20 FPS)
+    private static final int TICK_RATE_MS = 50;
+    // Can use this to stop the loop externally
+    private volatile boolean isRunning = true;
 
     public Game() {
         level = 0;
@@ -18,7 +25,7 @@ public class Game {
         return instance;
     }
 
-    public void createGameBoard() {
+    public void createGameSession() {
         this.gameBoard = new GameBoard();
         this.tickNumber = 0;
     }
@@ -44,7 +51,7 @@ public class Game {
                             .setHealth(300)
                             .setDamage(20)
                             .setProjectile(
-                                    new Projectile(0, 0, 1, 0, 5, 5)).
+                                    new Projectile(0, 10, 1, 0, 5, 5)).
                             setAverageActionSpeed(1.425)
                             .build());
                 }
@@ -54,7 +61,8 @@ public class Game {
                     break;
                 }
 
-                lastTime = currentTime; // Reset the last tick time
+                // Reset the last tick time
+                lastTime = currentTime;
             }
 
             // Calculate sleep time to avoid busy-waiting and give time to other processes
