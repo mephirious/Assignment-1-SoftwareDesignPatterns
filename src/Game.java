@@ -1,7 +1,3 @@
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 public class Game {
     private static Game instance;
     private GameBoard gameBoard;
@@ -48,7 +44,7 @@ public class Game {
                             .setHealth(300)
                             .setDamage(20)
                             .setProjectile(
-                                    new Projectile(0, 0, 10, 1, 0, 5, 5)).
+                                    new Projectile(0, 0, 1, 0, 5, 5)).
                             setAverageActionSpeed(1.425)
                             .build());
                 }

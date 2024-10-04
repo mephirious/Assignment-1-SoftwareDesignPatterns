@@ -1,11 +1,9 @@
-public class Entity extends Container {
-    private final String name;
-    private final String description;
-    private final int health;
-    private final int damage;
-    private final Projectile projectile;
-
-
+public abstract class Entity extends Container {
+    private String name;
+    private String description;
+    private int health;
+    private int damage;
+    private Projectile projectile;
 
     public Entity(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
         super(positionX, positionY);
@@ -16,69 +14,17 @@ public class Entity extends Container {
         this.projectile = projectile;
     }
 
-    public Projectile attack() {
-        return projectile.clone();
-    }
-
-    public void update(GameBoard gameBoard) {
-        System.out.println("Update entity " + this.name);
-    }
-
-
-    // Getters for properties
+    public void setName(String name) { this.name = name; }
     public String getName() { return name; }
+    public void setDescription(String description) { this.description = description;}
     public String getDescription() { return description; }
+    public void setHealth(int health) { this.health = health; }
     public int getHealth() { return health; }
+    public void setDamage(int damage) { this.damage = damage; }
     public int getDamage() { return damage; }
+    public void setProjectile(Projectile projectile) { this.projectile = projectile; }
     public Projectile getProjectile() { return projectile; }
 
-    // Entity Builder class
-    public static class Builder {
-        private int positionX;
-        private int positionY;
-        private String name;
-        private String description;
-        private int health;
-        private int damage;
-        private Projectile projectile;
-
-        public Builder setPositionX(int positionX) {
-            this.positionX = positionX;
-            return this;
-        }
-
-        public Builder setPositionY(int positionY) {
-            this.positionY = positionY;
-            return this;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder setHealth(int health) {
-            this.health = health;
-            return this;
-        }
-
-        public Builder setDamage(int damage) {
-            this.damage = damage;
-            return this;
-        }
-
-        public Builder setProjectile(Projectile projectile) {
-            this.projectile = projectile;
-            return this;
-        }
-
-        public Entity build() {
-            return new Entity(positionX, positionY, name, description, health, damage, projectile);
-        }
-    }
+    public Projectile attack() { return projectile.clone(); }
+    public void update(GameBoard gameBoard) { System.out.println("Update entity: " + getName()); }
 }

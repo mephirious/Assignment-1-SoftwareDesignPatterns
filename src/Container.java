@@ -2,6 +2,11 @@ public abstract class Container {
     private int positionX;
     private int positionY;
 
+    public Container(int positionX, int positionY) {
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
+
     public void setPositionX(int positionX) {
         this.positionX = positionX;
     }
@@ -13,10 +18,5 @@ public abstract class Container {
     }
     public int getPositionY() {
         return positionY;
-    }
-
-    public Container(int positionX, int positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
     }
 }

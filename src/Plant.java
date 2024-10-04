@@ -1,10 +1,10 @@
 public class Plant extends Entity {
     private double averageActionSpeed;
-    private Cooldown attackCooldown;
+    private Cooldown cooldown;
 
     public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile, double averageActionSpeed) {
         super(positionX, positionY, name, description, health, damage, projectile);
-        this.attackCooldown = new Cooldown(averageActionSpeed);
+        cooldown = new Cooldown(averageActionSpeed);
     }
 
     public static class Builder {
@@ -28,7 +28,7 @@ public class Plant extends Entity {
             return this;
         }
 
-        public Plant.Builder setName(String name) {
+        public Builder setName(String name) {
             this.name = name;
             return this;
         }
@@ -65,7 +65,7 @@ public class Plant extends Entity {
 
     @Override
     public void update(GameBoard gameBoard) {
-        if (attackCooldown.isReady()) {
+        if (cooldown.isReady()) {
             // Execute the attack logic (e.g., shoot a projectile)
             // TODO: Make some changes so it only shoots if triggered.
             System.out.println(this.getName() + " is shooting!");
@@ -73,10 +73,11 @@ public class Plant extends Entity {
             gameBoard.addProjectile(this.attack());
 
             // Trigger cooldown
-            attackCooldown.trigger();
+            cooldown.trigger();
         } else {
             // On cooldown, cannot attack yet
             // System.out.println("Attack is on cooldown!");
         }
     }
+
 }

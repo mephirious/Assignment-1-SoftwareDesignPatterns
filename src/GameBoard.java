@@ -34,7 +34,7 @@ public class GameBoard {
         Iterator<Projectile> iterator = projectiles.iterator();
         while (iterator.hasNext()) {
             Projectile p = iterator.next();
-            p.update();
+            p.updatePosition();
 
             // If collision or out-of-bounds, remove the projectile
             if (p.checkCollision() || isOutOfBounds(p)) {
