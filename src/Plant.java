@@ -8,7 +8,7 @@ interface IBuilderPlants {
     Plant build();
 }
 
-public class Plant extends Entity {
+public class Plant extends EntityActions {
     private double averageActionSpeed;
     private Cooldown cooldown;
 

@@ -1,33 +1,18 @@
 interface IGame {
     void createGameSession();
-    void startGameplay();
+    void startGameplay() throws InterruptedException;
 }
 
-public class Game {
-    private static Game instance;
+class GameSession {
     private GameBoard gameBoard;
-    private int level;
     private int tickNumber;
-
-    // Tick every 50 milliseconds (20 FPS)
+    private volatile boolean isRunning;
     private static final int TICK_RATE_MS = 50;
-    // Can use this to stop the loop externally
-    private volatile boolean isRunning = true;
 
-    public Game() {
-        level = 0;
-    }
-
-    public static Game getInstance() {
-        if (instance == null) {
-            instance = new Game();
-        }
-        return instance;
-    }
-
-    public void createGameSession() {
-        this.gameBoard = new GameBoard();
-        this.tickNumber = 0;
+    public void initialize() {
+        gameBoard = new GameBoard();
+        tickNumber = 0;
+        isRunning = true;
     }
 
     public void startGameplay() throws InterruptedException {
@@ -38,22 +23,11 @@ public class Game {
             long elapsedTime = currentTime - lastTime;
 
             if (elapsedTime >= TICK_RATE_MS) {
-                // Execute game logic in each tick
-                this.tickNumber += 1;
+                tickNumber += 1;
                 boolean continueGame = gameBoard.Tick();
 
                 if (tickNumber % 100 == 0) {
-
-                    // Using the Builder Pattern to create a PeaShooter entity
-                    this.gameBoard.addEntity(new Plant.Builder()
-                            .setName("Pea Shooter" + this.tickNumber)
-                            .setDescription("A plant that shoots peas")
-                            .setHealth(300)
-                            .setDamage(20)
-                            .setProjectile(
-                                    new Projectile(0, 10, 1, 0, 5, 5)).
-                            setAverageActionSpeed(1.425)
-                            .build());
+                    addPlantEntity();
                 }
 
                 if (!continueGame) {
@@ -61,15 +35,52 @@ public class Game {
                     break;
                 }
 
-                // Reset the last tick time
                 lastTime = currentTime;
             }
 
-            // Calculate sleep time to avoid busy-waiting and give time to other processes
             long sleepTime = TICK_RATE_MS - (System.currentTimeMillis() - lastTime);
             if (sleepTime > 0) {
                 Thread.sleep(sleepTime);
             }
         }
     }
+
+    private void addPlantEntity() {
+        gameBoard.addEntity(new Plant.Builder()
+                .setName("Pea Shooter " + tickNumber)
+                .setDescription("A plant that shoots peas")
+                .setHealth(300)
+                .setDamage(20)
+                .setProjectile(new Projectile(0, 10, 1, 0, 5, 5))
+                .setAverageActionSpeed(1.425)
+                .build());
+    }
 }
+
+public class Game implements IGame {
+    private static Game instance;
+    private GameSession gameSession;
+
+    private Game() {}
+
+    public static Game getInstance() {
+        if (instance == null) {
+            instance = new Game();
+        }
+        return instance;
+    }
+
+    @Override
+    public void createGameSession() {
+        this.gameSession = new GameSession();
+        this.gameSession.initialize();
+    }
+
+    @Override
+    public void startGameplay() throws InterruptedException {
+        if (gameSession != null) {
+            gameSession.startGameplay();
+        }
+    }
+}
+

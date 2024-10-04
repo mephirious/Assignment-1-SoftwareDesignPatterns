@@ -3,12 +3,11 @@ interface Actions {
     void update(GameBoard gameBoard);
 }
 
-public abstract class Entity extends Container implements Actions {
+class Entity extends Container {
     private String name;
     private String description;
     private int health;
     private int damage;
-    private Projectile projectile;
 
     public Entity(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
         super(positionX, positionY);
@@ -16,7 +15,6 @@ public abstract class Entity extends Container implements Actions {
         this.description = description;
         this.health = health;
         this.damage = damage;
-        this.projectile = projectile;
     }
 
     public void setName(String name) { this.name = name; }
@@ -27,9 +25,20 @@ public abstract class Entity extends Container implements Actions {
     public int getHealth() { return health; }
     public void setDamage(int damage) { this.damage = damage; }
     public int getDamage() { return damage; }
+}
+
+public abstract class EntityActions extends Entity {
+    private Projectile projectile;
+
+    public EntityActions(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
+        super(positionX, positionY, name, description, health, damage, projectile);
+        this.projectile = projectile;
+    }
+
     public void setProjectile(Projectile projectile) { this.projectile = projectile; }
     public Projectile getProjectile() { return projectile; }
 
     public Projectile attack() { return projectile.clone(); }
     public void update(GameBoard gameBoard) { System.out.println("Update entity: " + getName()); }
 }
+
