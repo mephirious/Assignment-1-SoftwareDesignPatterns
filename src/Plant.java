@@ -85,9 +85,34 @@ public class Plant extends EntityActions {
             Projectile peaProjectile = new Projectile(0, 0, 1, 0, 5, 5);
             return (new Builder()
                     .setName("Pea Shooter")
-                    .setDescription("A plant that shoots peas")
+                    .setDescription("Peashooters are your first line of defense. They shoot peas at attacking zombies.")
                     .setHealth(300)
                     .setDamage(20)
+                    .setAverageActionSpeed(1.425)
+                    .setProjectile(peaProjectile)
+                    .build());
+        }
+
+        public static Plant constructSunflower() {
+            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0);
+            return (new Builder()
+                    .setName("Sunflower")
+                    .setDescription("Sunflowers are essential for you to produce extra sun. Try planting as many as you can!")
+                    .setHealth(300)
+                    .setDamage(0)
+                    .setAverageActionSpeed(24.25)
+                    .setProjectile(peaProjectile)
+                    .build());
+        }
+
+        public static Plant constructWallNut() {
+            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0);
+            return (new Builder()
+                    .setName("Wall-nut")
+                    .setDescription("Wall-nuts have hard shells which you can use to protect your other plants.")
+                    .setHealth(4000)
+                    .setDamage(0)
+                    .setAverageActionSpeed(0)
                     .setProjectile(peaProjectile)
                     .build());
         }
