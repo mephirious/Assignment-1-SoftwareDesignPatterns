@@ -6,12 +6,12 @@ public class Main {
 
         // Using the Builder Pattern to create a PeaShooter entity
         Plant peaShooter = (new Plant.Builder()
-            .setName("Pea Shooter")
-            .setDescription("A plant that shoots peas")
-            .setHealth(300)
-            .setDamage(20)
-            .setProjectile(peaProjectile)
-            .build());
+                .setName("Pea Shooter")
+                .setDescription("A plant that shoots peas")
+                .setHealth(300)
+                .setDamage(20)
+                .setProjectile(peaProjectile)
+                .build());
 
         Game game = Game.getInstance();
 

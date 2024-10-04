@@ -41,4 +41,3 @@ public abstract class EntityActions extends Entity {
     public Projectile attack() { return projectile.clone(); }
     public void update(GameBoard gameBoard) { System.out.println("Update entity: " + getName()); }
 }
-
