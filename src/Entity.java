@@ -1,54 +1,7 @@
-interface Shape {
-    public double getArea();
-    public boolean CheckCollision(Shape shape);
-}
-
-class Square implements Shape {
-    private int width;
-
-    @Override
-    public double getArea() {
-        return (double) this.width * this.width;
-    }
-
-    @Override
-    public boolean CheckCollision(Shape shape) {
-        return false;
-    }
-}
-
-abstract class Container {
-    private int positionX;
-    private int positionY;
-    private Shape shape;
-    // private Image image;
-
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
-    }
-
-    public Container(int positionX, int positionY) {
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }
-}
-
 public class Entity extends Container {
     private final String name;
     private final String description;
-    private int health;
+    private final int health;
     private final int damage;
     private final Projectile projectile;
 

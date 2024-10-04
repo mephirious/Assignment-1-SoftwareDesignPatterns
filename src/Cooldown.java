@@ -1,17 +1,20 @@
 interface ICooldown {
-    public boolean isReady();
-    public void trigger();
-    public void reset();
+    boolean isReady();
+    void trigger();
+    void reset();
 }
 
-
 public class Cooldown implements ICooldown {
-    private final long cooldownDuration; // In milliseconds
-    private long lastActionTime; // The time when the last action was performed
+    // In milliseconds
+    private final long cooldownDuration;
+    // The time when the last action was performed
+    private long lastActionTime;
 
     public Cooldown(double averageActionSpeed) {
-        this.cooldownDuration = (long) (1000 * averageActionSpeed); // Convert to milliseconds
-        this.lastActionTime = 0; // Start without cooldown
+        // Convert to milliseconds
+        this.cooldownDuration = (long) (1000 * averageActionSpeed);
+        // Start without cooldown
+        this.lastActionTime = 0;
     }
 
     // Check if the cooldown has expired
