@@ -27,7 +27,7 @@ class Entity extends Container {
     public int getDamage() { return damage; }
 }
 
-public abstract class EntityActions extends Entity {
+public abstract class EntityActions extends Entity implements Actions {
     private Projectile projectile;
 
     public EntityActions(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
