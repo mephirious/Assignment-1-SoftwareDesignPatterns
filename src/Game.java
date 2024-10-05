@@ -27,8 +27,17 @@ class GameSession {
                 boolean continueGame = gameBoard.Tick();
 
                 if (tickNumber % 100 == 0) {
-                    addPlantEntity();
+                    gameBoard.addEntity(Plant.Director.constructPeaShooter());
                 }
+
+                if (tickNumber % 150 == 0) {
+                    gameBoard.addEntity(Plant.Director.constructWallNut());
+                }
+
+                if (tickNumber % 200 == 0) {
+                    gameBoard.addEntity(Plant.Director.constructSunflower());
+                }
+
 
                 if (!continueGame) {
                     isRunning = false;
@@ -43,17 +52,6 @@ class GameSession {
                 Thread.sleep(sleepTime);
             }
         }
-    }
-
-    private void addPlantEntity() {
-        gameBoard.addEntity(new Plant.Builder()
-                .setName("Pea Shooter " + tickNumber)
-                .setDescription("A plant that shoots peas")
-                .setHealth(300)
-                .setDamage(20)
-                .setProjectile(new Projectile(0, 10, 1, 0, 5, 5))
-                .setAverageActionSpeed(1.425)
-                .build());
     }
 }
 
