@@ -116,5 +116,5 @@ public class Plant extends EntityActions {
                     .setProjectile(peaProjectile)
                     .build());
         }
-    }
+    }   
 }

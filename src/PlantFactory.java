@@ -8,7 +8,7 @@ class Peas {
 
 class AttackingPeas extends Peas {
     public void grow() {
-        System.out.println("Attackin peas is growing!");
+        System.out.println("Attacking peas is growing!");
     }
 }
 
@@ -30,55 +30,24 @@ class ProducingMushroom extends Mushroom {
     }
 }
 
-// Abstract Factory
 public abstract class PlantFactory {
-    public abstract MushroomFactory createMushroomFactory();
-    public abstract PeasFactory createPeasFactory();
+    public abstract Peas createPlant();
+    public abstract Mushroom createMushroom();
 }
-
-// Concrete Factory (Abstract Factory Implementation)
-class AttackingPlantFactory extends PlantFactory {
-    public MushroomFactory createMushroomFactory() {
-        return new AttackingMushroomFactory();  // Factory Method
+class AttackingFactory extends PlantFactory {
+    public Peas createPlant() {
+        return new AttackingPeas();
     }
-
-    public PeasFactory createPeasFactory() {
-        return new AttackingPeasFactory();  // Factory Method
-    }
-}
-
-// Factory Method for Mushroom
-abstract class MushroomFactory {
-    abstract Mushroom createMushroom();
-}
-
-class AttackingMushroomFactory extends MushroomFactory {
     public Mushroom createMushroom() {
-        return new AttackingMushroom();  // Specific Mushroom
+        return new AttackingMushroom();
     }
 }
-
-class ProducingMushroomFactory extends MushroomFactory {
+class ProducingFactory extends PlantFactory {
+    public Peas createPlant() {
+        return new ProducingPeas();
+    }
     public Mushroom createMushroom() {
-        return new ProducingMushroom();  // Specific Mushroom
-    }
-}
-
-
-// Factory Method for Peas
-abstract class PeasFactory {
-    abstract Mushroom createPeas();
-}
-
-class AttackingPeasFactory extends PeasFactory {
-    public Mushroom createPeas() {
-        return new AttackingMushroom();  // Specific Mushroom
-    }
-}
-
-class ProducingPeasFactory extends PeasFactory {
-    public Mushroom createPeas() {
-        return new ProducingMushroom();  // Specific Mushroom
+        return new ProducingMushroom();
     }
 }
 
