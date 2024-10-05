@@ -30,27 +30,55 @@ class ProducingMushroom extends Mushroom {
     }
 }
 
+// Abstract Factory
 public abstract class PlantFactory {
-    public abstract Mushroom createMushroom();
-    public abstract Peas createPeas();
+    public abstract MushroomFactory createMushroomFactory();
+    public abstract PeasFactory createPeasFactory();
 }
 
-class AttackingFactory extends PlantFactory {
+// Concrete Factory (Abstract Factory Implementation)
+class AttackingPlantFactory extends PlantFactory {
+    public MushroomFactory createMushroomFactory() {
+        return new AttackingMushroomFactory();  // Factory Method
+    }
+
+    public PeasFactory createPeasFactory() {
+        return new AttackingPeasFactory();  // Factory Method
+    }
+}
+
+// Factory Method for Mushroom
+abstract class MushroomFactory {
+    abstract Mushroom createMushroom();
+}
+
+class AttackingMushroomFactory extends MushroomFactory {
     public Mushroom createMushroom() {
-        return new AttackingMushroom();
-    }
-
-    public Peas createPeas() {
-        return new AttackingPeas();
+        return new AttackingMushroom();  // Specific Mushroom
     }
 }
 
-class ProducingFactory extends PlantFactory {
+class ProducingMushroomFactory extends MushroomFactory {
     public Mushroom createMushroom() {
-        return new ProducingMushroom();
-    }
-
-    public Peas createPeas() {
-        return new ProducingPeas();
+        return new ProducingMushroom();  // Specific Mushroom
     }
 }
+
+
+// Factory Method for Peas
+abstract class PeasFactory {
+    abstract Mushroom createPeas();
+}
+
+class AttackingPeasFactory extends PeasFactory {
+    public Mushroom createPeas() {
+        return new AttackingMushroom();  // Specific Mushroom
+    }
+}
+
+class ProducingPeasFactory extends PeasFactory {
+    public Mushroom createPeas() {
+        return new ProducingMushroom();  // Specific Mushroom
+    }
+}
+
