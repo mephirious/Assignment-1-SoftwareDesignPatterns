@@ -1,7 +1,39 @@
 interface Actions {
-    Projectile attack();
     void update(GameBoard gameBoard);
 }
+interface EntityBehavior {
+    void performAction(EntityActions entity, GameBoard gameBoard);
+}
+class AttackBehavior implements EntityBehavior {
+    @Override
+    public void performAction(EntityActions entity, GameBoard gameBoard) {
+        Projectile projectile = entity.getProjectile();
+        if (projectile != null) {
+            System.out.println(entity.getName() + " is attacking!");
+            gameBoard.addProjectile(projectile.clone());
+        } else {
+            System.out.println(entity.getName() + " cannot attack without a projectile.");
+        }
+    }
+}
+
+class ProduceSunBehavior implements EntityBehavior {
+    @Override
+    public void performAction(EntityActions entity, GameBoard gameBoard) {
+        System.out.println(entity.getName() + " is producing sun!");
+        //gameBoard.spawnSun(25);
+    }
+}
+
+class PassiveBehavior implements EntityBehavior {
+    @Override
+    public void performAction(EntityActions entity, GameBoard gameBoard) {
+        //System.out.println(entity.getName() + " breathing . . .");
+    }
+}
+
+
+
 
 class Entity extends Container {
     private String name;
@@ -29,15 +61,22 @@ class Entity extends Container {
 
 public abstract class EntityActions extends Entity implements Actions {
     private Projectile projectile;
+    private EntityBehavior behavior;
 
-    public EntityActions(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
+    public EntityActions(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile, EntityBehavior behavior) {
         super(positionX, positionY, name, description, health, damage, projectile);
         this.projectile = projectile;
+        this.behavior = behavior;
     }
 
     public void setProjectile(Projectile projectile) { this.projectile = projectile; }
     public Projectile getProjectile() { return projectile; }
 
-    public Projectile attack() { return projectile.clone(); }
-    public void update(GameBoard gameBoard) { System.out.println("Update entity: " + getName()); }
+    public void setBehavior(EntityBehavior behavior) { this.behavior = behavior; }
+    public EntityBehavior getBehavior() { return this.behavior; }
+
+    @Override
+    public void update(GameBoard gameBoard) {
+        behavior.performAction(this, gameBoard);
+    }
 }

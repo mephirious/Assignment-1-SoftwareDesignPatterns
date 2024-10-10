@@ -1,6 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
+
 interface IGame {
     void createGameSession();
     void startGameplay() throws InterruptedException;
+}
+interface Command {
+    void execute(GameBoard gameBoard, int x, int y);
 }
 
 class GameSession {
@@ -8,13 +14,47 @@ class GameSession {
     private int tickNumber;
     private volatile boolean isRunning;
     private static final int TICK_RATE_MS = 50;
+    private List<ScheduledCommand> scheduledCommands;
 
     public void initialize() {
         gameBoard = new GameBoard();
         tickNumber = 0;
         isRunning = true;
+
+        scheduledCommands = new ArrayList<>();
+        // Schedule commands
+        scheduleCommand(100, new AddPeashooterCommand());
+        scheduleCommand(150, new AddWallnutCommand());
+        scheduleCommand(200, new AddSunflowerCommand());
     }
 
+    private void scheduleCommand(int interval, Command command) {
+        scheduledCommands.add(new ScheduledCommand(interval, command));
+    }
+
+
+    private static class ScheduledCommand implements Command{
+        private final int interval;
+        private final Command command;
+
+        public ScheduledCommand(int interval, Command command) {
+            this.interval = interval;
+            this.command = command;
+        }
+
+        public int getInterval() {
+            return interval;
+        }
+
+        @Override
+        public void execute(GameBoard gameBoard, int x, int y) {
+            command.execute(gameBoard, x, y);
+        }
+
+        public Command getCommand() {
+            return command;
+        }
+    }
     public void startGameplay() throws InterruptedException {
         long lastTime = System.currentTimeMillis();
 
@@ -26,18 +66,12 @@ class GameSession {
                 tickNumber += 1;
                 boolean continueGame = gameBoard.Tick();
 
-                if (tickNumber % 100 == 0) {
-                    gameBoard.addEntity(Plant.Director.constructPeaShooter());
+                // Execute scheduled commands
+                for (ScheduledCommand scheduledCommand : scheduledCommands) {
+                    if (tickNumber % scheduledCommand.getInterval() == 0) {
+                        scheduledCommand.getCommand().execute(gameBoard, 100, 200);
+                    }
                 }
-
-                if (tickNumber % 150 == 0) {
-                    gameBoard.addEntity(Plant.Director.constructWallNut());
-                }
-
-                if (tickNumber % 200 == 0) {
-                    gameBoard.addEntity(Plant.Director.constructSunflower());
-                }
-
 
                 if (!continueGame) {
                     isRunning = false;
@@ -82,3 +116,38 @@ public class Game implements IGame {
     }
 }
 
+class AddPeashooterCommand implements Command {
+    @Override
+    public void execute(GameBoard gameBoard, int x, int y) {
+        Plant peashooter = Plant.Director.constructPeaShooter();
+        peashooter.setPositionX(x);
+        peashooter.setPositionY(y);
+        peashooter.getProjectile().setPositionX(x);
+        peashooter.getProjectile().setPositionY(y);
+        gameBoard.addEntity(peashooter);
+    }
+}
+
+class AddWallnutCommand implements Command {
+    @Override
+    public void execute(GameBoard gameBoard, int x, int y) {
+        Plant wallnut = Plant.Director.constructWallNut();
+        wallnut.setPositionX(x);
+        wallnut.setPositionY(y);
+        wallnut.getProjectile().setPositionX(x);
+        wallnut.getProjectile().setPositionY(y);
+        gameBoard.addEntity(wallnut);
+    }
+}
+
+class AddSunflowerCommand implements Command {
+    @Override
+    public void execute(GameBoard gameBoard, int x, int y) {
+        Plant sunflower = Plant.Director.constructSunflower();
+        sunflower.setPositionX(x);
+        sunflower.setPositionY(y);
+        sunflower.getProjectile().setPositionX(x);
+        sunflower.getProjectile().setPositionY(y);
+        gameBoard.addEntity(sunflower);
+    }
+}
