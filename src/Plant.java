@@ -8,12 +8,14 @@ interface IBuilderPlants {
     Plant build();
 }
 
+
+
 public class Plant extends EntityActions {
     private double averageActionSpeed;
     private Cooldown cooldown;
 
-    public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile, double averageActionSpeed) {
-        super(positionX, positionY, name, description, health, damage, projectile);
+    public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
+        super(positionX, positionY, name, description, health, damage, projectile, behavior);
         cooldown = new Cooldown(averageActionSpeed);
     }
 
@@ -22,9 +24,7 @@ public class Plant extends EntityActions {
         if (cooldown.isReady()) {
             // Execute the attack logic (e.g., shoot a projectile)
             // TODO: Make some changes so it only shoots if triggered.
-            System.out.println(this.getName() + " is shooting!");
-
-            gameBoard.addProjectile(this.attack());
+            this.getBehavior().performAction(this, gameBoard);
 
             // Trigger cooldown
             cooldown.trigger();
@@ -37,11 +37,12 @@ public class Plant extends EntityActions {
     public static class Builder implements IBuilderPlants {
         private int positionX;
         private int positionY;
-        private String name;
-        private String description;
-        private int health;
-        private int damage;
+        private String name = "Plant name";
+        private String description = "Plant description";
+        private int health = 0;
+        private int damage = 0;
         private Projectile projectile;
+        private EntityBehavior behavior = new PassiveBehavior();
         private double averageActionSpeed;
         public Builder setPositionX(int positionX) {
             this.positionX = positionX;
@@ -71,12 +72,16 @@ public class Plant extends EntityActions {
             this.projectile = projectile;
             return this;
         }
+        public Builder setBehavior(EntityBehavior behavior) {
+            this.behavior = behavior;
+            return this;
+        }
         public Builder setAverageActionSpeed(double averageActionSpeed) {
             this.averageActionSpeed = averageActionSpeed;
             return this;
         }
         public Plant build() {
-            return new Plant(positionX, positionY, name, description, health, damage, projectile, averageActionSpeed);
+            return new Plant(positionX, positionY, name, description, health, damage, projectile, behavior, averageActionSpeed);
         }
     }
 
@@ -90,6 +95,7 @@ public class Plant extends EntityActions {
                     .setDamage(20)
                     .setAverageActionSpeed(1.425)
                     .setProjectile(peaProjectile)
+                    .setBehavior(new AttackBehavior())
                     .build());
         }
 
@@ -102,6 +108,7 @@ public class Plant extends EntityActions {
                     .setDamage(0)
                     .setAverageActionSpeed(24.25)
                     .setProjectile(peaProjectile)
+                    .setBehavior(new ProduceSunBehavior())
                     .build());
         }
 
@@ -118,3 +125,4 @@ public class Plant extends EntityActions {
         }
     }   
 }
+
