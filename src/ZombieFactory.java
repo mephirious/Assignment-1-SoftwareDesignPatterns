@@ -1,7 +1,7 @@
 public class ZombieFactory {
-    private static Zombie normalZombiePrototype = new NormalZombie();
-    private static Zombie strongZombiePrototype = new StrongZombie();
-    private static Zombie bossZombiePrototype = new BossZombie();
+    private static Zombie normalZombiePrototype = new NormalZombie(250);
+    private static Zombie strongZombiePrototype = new StrongZombie(500);
+    private static Zombie bossZombiePrototype = new BossZombie(1000);
 
     public static Zombie createZombie(String timeOfDay) {
         switch (timeOfDay) {

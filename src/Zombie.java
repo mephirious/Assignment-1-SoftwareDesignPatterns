@@ -1,5 +1,33 @@
+import java.util.List;
+import java.util.ArrayList;
+
 public class Zombie implements Cloneable {
     protected int row;
+    private int health;
+    private List<Observer> observers = new ArrayList<>();
+
+    public Zombie(int health) {
+        this.health = health;
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.updateHealth(this.getClass().getSimpleName(), this.getHealth());
+        }
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void changeHealth(int amount) {
+        this.health += amount;
+        notifyObservers();
+    }
+
+    public int getHealth() {
+        return this.health;
+    }
 
     public void spawn() {
         System.out.println("Zombie spawned at row: " + row);
@@ -16,6 +44,10 @@ public class Zombie implements Cloneable {
 }
 
 class NormalZombie extends Zombie {
+    public NormalZombie(int health) {
+        super(health);
+    }
+
     @Override
     public void spawn() {
         System.out.println("Normal Zombie spawned at row: " + row);
@@ -23,6 +55,10 @@ class NormalZombie extends Zombie {
 }
 
 class StrongZombie extends Zombie {
+    public StrongZombie(int health) {
+        super(health);
+    }
+
     @Override
     public void spawn() {
         System.out.println("Strong Zombie spawned at row: " + row);
@@ -30,6 +66,10 @@ class StrongZombie extends Zombie {
 }
 
 class BossZombie extends Zombie {
+    public BossZombie(int health) {
+        super(health);
+    }
+
     @Override
     public void spawn() {
         System.out.println("Boss Zombie spawned at row: " + row);
