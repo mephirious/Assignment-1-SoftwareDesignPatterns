@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 interface Actions {
     void update(GameBoard gameBoard);
 }
@@ -38,8 +41,9 @@ class PassiveBehavior implements EntityBehavior {
 class Entity extends Container {
     private String name;
     private String description;
-    private int health;
+    int health;
     private int damage;
+    List<Observer> observers = new ArrayList<>();
 
     public Entity(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
         super(positionX, positionY);
@@ -67,6 +71,21 @@ public abstract class EntityActions extends Entity implements Actions {
         super(positionX, positionY, name, description, health, damage, projectile);
         this.projectile = projectile;
         this.behavior = behavior;
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.updateHealth(this.getName(), this.getHealth());
+        }
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void changeHealth(int amount) {
+        this.health += amount;
+        notifyObservers();
     }
 
     public void setProjectile(Projectile projectile) { this.projectile = projectile; }

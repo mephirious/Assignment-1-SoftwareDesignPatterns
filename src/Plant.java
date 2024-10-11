@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 interface IBuilderPlants {
     Plant.Builder setPositionX(int positionX);
     Plant.Builder setPositionY(int positionY);
@@ -13,6 +16,7 @@ interface IBuilderPlants {
 public class Plant extends EntityActions {
     private double averageActionSpeed;
     private Cooldown cooldown;
+    private List<Observer> observers = new ArrayList<>();
 
     public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
         super(positionX, positionY, name, description, health, damage, projectile, behavior);
@@ -32,6 +36,21 @@ public class Plant extends EntityActions {
             // On cooldown, cannot attack yet
             // System.out.println("Attack is on cooldown!");
         }
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.updateHealth(this.getName(), this.getHealth());
+        }
+    }
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void changeHealth(int amount) {
+        this.health += amount;
+        notifyObservers();
     }
 
     public static class Builder implements IBuilderPlants {
