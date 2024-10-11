@@ -11,17 +11,19 @@ interface IBuilderPlants {
     Plant build();
 }
 
-
-
 public class Plant extends EntityActions {
     private double averageActionSpeed;
     private Cooldown cooldown;
     private List<Observer> observers = new ArrayList<>();
+    private State state;
 
     public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
         super(positionX, positionY, name, description, health, damage, projectile, behavior);
         cooldown = new Cooldown(averageActionSpeed);
+        this.state = new InactiveState();
     }
+
+    public void setState(State state) {this.state = state;}
 
     @Override
     public void update(GameBoard gameBoard) {
@@ -29,7 +31,6 @@ public class Plant extends EntityActions {
             // Execute the attack logic (e.g., shoot a projectile)
             // TODO: Make some changes so it only shoots if triggered.
             this.getBehavior().performAction(this, gameBoard);
-
             // Trigger cooldown
             cooldown.trigger();
         } else {
@@ -52,6 +53,8 @@ public class Plant extends EntityActions {
         this.health += amount;
         notifyObservers();
     }
+
+
 
     public static class Builder implements IBuilderPlants {
         private int positionX;
