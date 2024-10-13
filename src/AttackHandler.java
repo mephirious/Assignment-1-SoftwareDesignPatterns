@@ -50,3 +50,27 @@ public class AttackHandler implements GameActionHandler {
         return null;
     }
 }
+
+// Example of modification for Mediator pattern
+//public class AttackHandler implements GameActionHandler {
+//    private GameActionHandler nextHandler;
+//    private GameMediator mediator;
+//
+//    public AttackHandler(GameMediator mediator) {
+//        this.mediator = mediator;
+//    }
+//
+//    @Override
+//    public void setNext(GameActionHandler handler) {
+//        this.nextHandler = handler;
+//    }
+//
+//    @Override
+//    public void handleRequest(GameBoard gameBoard, EntityActions attacker, EntityActions target) {
+//        if (attacker.getBehavior() instanceof AttackBehavior) {
+//            mediator.attack(attacker, target);
+//        } else if (nextHandler != null) {
+//            nextHandler.handleRequest(gameBoard, attacker);
+//        }
+//    }
+//}
