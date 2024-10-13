@@ -10,20 +10,20 @@ public class MovementHandler implements GameActionHandler {
     public void handleRequest(GameBoard gameBoard, EntityActions entity) {
         if (entity instanceof Zombie && entityNeedsToMove(entity)) {
             int currentX = entity.getPositionX();
-
             int velocityX = entity.getVelocityX();
-
             int newX = currentX - velocityX;
 
-            // reset the pos of zombie
+            // zombie moves
             entity.setPositionX(newX);
 
-            // if zombie reached the bound of plant
             if (isOutOfBounds(newX, entity, gameBoard)) {
                 gameBoard.removeEntity(entity);
-                gameBoard.setGameOver();
-            }
 
+                // game over if zombie reached the end of map
+                gameBoard.setGameOver();
+            } else {
+                handleZombiePlantInteraction(newX, entity, gameBoard);
+            }
         } else if (nextHandler != null) {
             nextHandler.handleRequest(gameBoard, entity);
         }
@@ -34,19 +34,24 @@ public class MovementHandler implements GameActionHandler {
     }
 
     private boolean isOutOfBounds(int x, EntityActions entity, GameBoard gameBoard) {
-        if (x < 0) {
-            return true;
-        }
+        // zombie reached the end
+        return x < 0;
+    }
 
+    // interactions between zombie and plant at the row
+    private void handleZombiePlantInteraction(int x, EntityActions zombie, GameBoard gameBoard) {
         for (EntityActions plant : gameBoard.getEntities()) {
             if (plant instanceof Plant && plant.getPositionX() == x) {
-                // zombie reached the plant
-                plant.changeHealth(-entity.getDamage());
+                // reached the plant
+                plant.changeHealth(-zombie.getDamage());
 
-                // zombie continues to attack
-                return false;
+                // remove the plant
+                if (plant.getHealth() <= 0) {
+                    gameBoard.removeEntity(plant);
+                }
+
+                return;
             }
         }
-        return false;
     }
 }
