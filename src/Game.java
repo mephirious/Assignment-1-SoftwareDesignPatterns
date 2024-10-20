@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 interface IGame {
     void createGameSession();
@@ -15,6 +16,7 @@ class GameSession {
     private volatile boolean isRunning;
     private static final int TICK_RATE_MS = 50;
     private List<ScheduledCommand> scheduledCommands;
+    private boolean isPaused = false;
 
     public void initialize() {
         gameBoard = new GameBoard();
@@ -30,6 +32,12 @@ class GameSession {
 
     private void scheduleCommand(int interval, Command command) {
         scheduledCommands.add(new ScheduledCommand(interval, command));
+    }
+
+    public void restore(GameMemento memento) {
+        this.tickNumber = (int) memento.getTickNumber();
+        this.isRunning = memento.isRunning();
+        this.isPaused = memento.isPaused();
     }
 
 
@@ -55,35 +63,76 @@ class GameSession {
             return command;
         }
     }
+
+    private void startCommandListener() {
+        Thread commandThread = new Thread(() -> {
+            Scanner scanner = new Scanner(System.in);
+
+            while (isRunning) {
+                String command = scanner.nextLine();
+
+                if (command.equalsIgnoreCase("stop")) {
+                    pauseGame();
+                } else if (command.equalsIgnoreCase("resume")) {
+                    resumeGame();
+                } else if (command.equalsIgnoreCase("exit")) {
+                    stopGame();
+                }
+            }
+        });
+
+        commandThread.setDaemon(true);
+        commandThread.start();
+    }
+
+    private void pauseGame() {
+        System.out.println("Game paused.");
+        isPaused = true;
+    }
+
+    private void resumeGame() {
+        System.out.println("Game resumed.");
+        isPaused = false;
+    }
+
+    private void stopGame() {
+        System.out.println("Stopping the game...");
+        isRunning = false;
+    }
+
     public void startGameplay() throws InterruptedException {
         long lastTime = System.currentTimeMillis();
 
+        startCommandListener();
+
         while (isRunning) {
-            long currentTime = System.currentTimeMillis();
-            long elapsedTime = currentTime - lastTime;
+            if (!isPaused) {
+                long currentTime = System.currentTimeMillis();
+                long elapsedTime = currentTime - lastTime;
 
-            if (elapsedTime >= TICK_RATE_MS) {
-                tickNumber += 1;
-                boolean continueGame = gameBoard.Tick();
+                if (elapsedTime >= TICK_RATE_MS) {
+                    tickNumber += 1;
+                    boolean continueGame = gameBoard.Tick();
 
-                // Execute scheduled commands
-                for (ScheduledCommand scheduledCommand : scheduledCommands) {
-                    if (tickNumber % scheduledCommand.getInterval() == 0) {
-                        scheduledCommand.getCommand().execute(gameBoard, 100, 200);
+                    // Execute scheduled commands
+                    for (ScheduledCommand scheduledCommand : scheduledCommands) {
+                        if (tickNumber % scheduledCommand.getInterval() == 0) {
+                            scheduledCommand.getCommand().execute(gameBoard, 100, 200);
+                        }
                     }
+
+                    if (!continueGame) {
+                        isRunning = false;
+                        break;
+                    }
+
+                    lastTime = currentTime;
                 }
 
-                if (!continueGame) {
-                    isRunning = false;
-                    break;
+                long sleepTime = TICK_RATE_MS - (System.currentTimeMillis() - lastTime);
+                if (sleepTime > 0) {
+                    Thread.sleep(sleepTime);
                 }
-
-                lastTime = currentTime;
-            }
-
-            long sleepTime = TICK_RATE_MS - (System.currentTimeMillis() - lastTime);
-            if (sleepTime > 0) {
-                Thread.sleep(sleepTime);
             }
         }
     }
