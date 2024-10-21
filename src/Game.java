@@ -17,6 +17,7 @@ class GameSession {
     private static final int TICK_RATE_MS = 50;
     private List<ScheduledCommand> scheduledCommands;
     private boolean isPaused = false;
+    private GameMode currentMode;
 
     public void initialize() {
         gameBoard = new GameBoard();
@@ -24,10 +25,12 @@ class GameSession {
         isRunning = true;
 
         scheduledCommands = new ArrayList<>();
-        // Schedule commands
         scheduleCommand(100, new AddPeashooterCommand());
         scheduleCommand(150, new AddWallnutCommand());
         scheduleCommand(200, new AddSunflowerCommand());
+
+        chooseGameMode();
+        currentMode.initialize();
     }
 
     private void scheduleCommand(int interval, Command command) {
@@ -40,8 +43,28 @@ class GameSession {
         this.isPaused = memento.isPaused();
     }
 
+    private void chooseGameMode() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Choose a game mode: 1 - Story Mode, 2 - Survival Mode, 3 - Match-3 Mode");
+        int mode = scanner.nextInt();
 
-    private static class ScheduledCommand implements Command{
+        switch (mode) {
+            case 1:
+                currentMode = new StoryMode();
+                break;
+            case 2:
+                currentMode = new SurvivalMode();
+                break;
+            case 3:
+                currentMode = new Match3Mode();
+                break;
+            default:
+                System.out.println("Invalid choice. Defaulting to Story Mode.");
+                currentMode = new StoryMode();
+        }
+    }
+
+    private static class ScheduledCommand implements Command {
         private final int interval;
         private final Command command;
 
@@ -112,18 +135,13 @@ class GameSession {
 
                 if (elapsedTime >= TICK_RATE_MS) {
                     tickNumber += 1;
-                    boolean continueGame = gameBoard.Tick();
 
-                    // Execute scheduled commands
+                    currentMode.play();
+
                     for (ScheduledCommand scheduledCommand : scheduledCommands) {
                         if (tickNumber % scheduledCommand.getInterval() == 0) {
                             scheduledCommand.getCommand().execute(gameBoard, 100, 200);
                         }
-                    }
-
-                    if (!continueGame) {
-                        isRunning = false;
-                        break;
                     }
 
                     lastTime = currentTime;
@@ -164,6 +182,7 @@ public class Game implements IGame {
         }
     }
 }
+
 
 class AddPeashooterCommand implements Command {
     @Override
