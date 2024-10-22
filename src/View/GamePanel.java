@@ -1,10 +1,13 @@
 package View;
 
 import Model.EntityActions;
-import Model.Game;
 import Model.GameBoard;
 import Model.Projectile;
-
+import java.awt.Image;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Toolkit;
 import javax.swing.*;
 import java.awt.*;
 
@@ -75,29 +78,65 @@ public class GamePanel extends JPanel implements Runnable{
         gameThread.start();
     }
 
-
+    @Override
     public void paintComponent(Graphics g) {
-
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
+        // Load GIFs for entities and projectiles using Toolkit from the src/images folder
+        Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
+        Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
+        Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
+        Image projectileImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
+
+        int entityWidth = 40;
+        int entityHeight = 40;
+        int projectileWidth = 10;
+        int projectileHeight = 10;
+
+        // Draw the game board
         g2.setColor(Color.darkGray);
+        g2.fillRect(gameBoard.getPositionX(), gameBoard.getPositionY(), (40 + 20) * 9, (40 + 20) * 5);
 
-        g2.fillRect(gameBoard.getPositionX(), gameBoard.getPositionY(), (40+20)*9, (40+20)*5);
-
+        // Draw entities with corresponding animated GIFs
         for (EntityActions entity : gameBoard.getEntities()) {
+            Image entityImage = null;
+
             switch (entity.getName()) {
-                case "Pea Shooter" : g2.setColor(Color.green); break;
-                case "Sunflower" : g2.setColor(Color.yellow); break;
-                case "Wall-nut" : g2.setColor(Color.orange); break;
+                case "Pea Shooter":
+                    entityImage = peaShooterGif;
+                    break;
+                case "Sunflower":
+                    entityImage = sunflowerGif;
+                    break;
+                case "Wall-nut":
+                    entityImage = wallNutGif;
+                    break;
             }
-            g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);
 
+            // If the image is loaded, draw the animated gif
+            if (entityImage != null) {
+                g2.drawImage(entityImage, entity.getPositionX(), entity.getPositionY(), 40, 40, this);
+            } else {
+                // In case image loading fails, use a fallback color and rectangle
+                g2.setColor(Color.red);  // Default color for missing image
+                g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);
+            }
         }
 
+        // Draw projectiles as images
         for (Projectile projectile : gameBoard.getProjectiles()) {
-            g2.setColor(Color.green);
-            g2.fillRect(projectile.getPositionX(), projectile.getPositionY(), 10, 10);
+            // If the projectile image is loaded, draw it
+            if (projectileImage != null) {
+                g2.drawImage(projectileImage, projectile.getPositionX()+40, projectile.getPositionY()+5, 10, 10, this);
+            } else {
+                // In case the image fails to load, fallback to drawing a green rectangle
+                g2.setColor(Color.green);
+                g2.fillRect(projectile.getPositionX(), projectile.getPositionY(), 10, 10);
+            }
         }
 
+        // Ensure the component keeps repainting to animate the GIFs
+        Toolkit.getDefaultToolkit().sync(); // Synchronizes for smooth animation
     }
 }
