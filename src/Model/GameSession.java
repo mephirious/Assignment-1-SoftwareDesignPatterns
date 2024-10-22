@@ -104,8 +104,20 @@ public class GameSession {
 
     public void startGameplay() throws InterruptedException {
         long lastTime = System.currentTimeMillis();
-
         startCommandListener();
+
+        // Grid settings
+        int gridRows = 5;
+        int gridColumns = 9;
+        int cellWidth = 100;
+        int cellHeight = 125;
+        int leftMargin = 350; // Distance from the left side of the game board
+        int upperMargin = 125; // Distance from the upper side of the game board
+        int rightMargin = 510; // Distance from the right side of the game board
+
+        // Calculate the usable width of the game board after margins
+        int usableWidth = 1400 - leftMargin - rightMargin; // Total width for the grid
+        int usableHeight = 600 - upperMargin; // Total height for the grid
 
         while (isRunning) {
             if (!isPaused) {
@@ -119,11 +131,21 @@ public class GameSession {
                     // Execute scheduled commands
                     for (ScheduledCommand scheduledCommand : scheduledCommands) {
                         if (tickNumber % scheduledCommand.getInterval() == 0) {
+                            // Calculate a random position in the grid
                             Random rand = new Random();
-                            int x = rand.nextInt(0,9)*(40+20);
-                            int y = rand.nextInt(0,5)*(40+20);
-                            scheduledCommand.getCommand().execute(gameBoard, x+60, y+100);
-                            System.out.println("Created at" + x + ":" + y);
+                            int column = rand.nextInt(gridColumns);
+                            int row = rand.nextInt(gridRows);
+
+                            // Calculate the x and y positions based on the column and row
+                            int x = leftMargin + column * cellWidth; // Calculate x position
+                            int y = upperMargin + row * cellHeight; // Calculate y position
+
+                            // Ensure that the coordinates are within the game board limits
+                            if (x >= leftMargin && x + cellWidth <= 1400 - rightMargin &&
+                                    y >= upperMargin && y + cellHeight <= 600) {
+                                scheduledCommand.getCommand().execute(gameBoard, x, y);
+                                System.out.println("Created at " + x + ":" + y);
+                            }
                         }
                     }
 
@@ -131,7 +153,6 @@ public class GameSession {
                         isRunning = false;
                         break;
                     }
-
                     lastTime = currentTime;
                 }
 
@@ -142,4 +163,6 @@ public class GameSession {
             }
         }
     }
+
+
 }
