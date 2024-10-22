@@ -6,13 +6,13 @@ import javax.swing.*;
 
 public class Main {
 
-    public static void createGUI(GameBoard gameBoard) {
+    public static void createGUI(GameSession gameSession) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Plants vs Zombies");
 
-        GamePanel gamePanel = new GamePanel(gameBoard);
+        GamePanel gamePanel = new GamePanel(gameSession);
         window.add(gamePanel);
         gamePanel.startGameThread();
         window.pack();

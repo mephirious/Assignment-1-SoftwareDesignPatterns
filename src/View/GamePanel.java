@@ -1,8 +1,7 @@
 package View;
 
-import Model.EntityActions;
-import Model.GameBoard;
-import Model.Projectile;
+import Model.*;
+
 import java.awt.Image;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,6 +9,8 @@ import java.awt.Color;
 import java.awt.Toolkit;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -20,19 +21,63 @@ public class GamePanel extends JPanel implements Runnable{
     final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
-    final int screenWidth = tileSize * maxScreenCol;
-    final int screenHeight = tileSize * maxScreenRow;
+    final int screenWidth = 1400;
+    final int screenHeight = 600;
     GameBoard gameBoard;
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
 
-    public GamePanel(GameBoard gameBoard) {
+    private GameSession gameSession; // Reference to control the game
+
+    // Buttons for controlling the game
+    private JButton stopButton;
+    private JButton resumeButton;
+
+    public GamePanel(GameSession gameSession) {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-        this.gameBoard = gameBoard;
+        this.gameBoard = gameSession.getGameBoard();
+        this.gameSession = gameSession;
+
+        // Create the control buttons and add action listeners
+        setupControlButtons();
+    }
+
+    private void setupControlButtons() {
+        // Initialize buttons
+        stopButton = new JButton("Stop");
+        resumeButton = new JButton("Resume");
+
+        // Set button actions
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameSession.pauseGame();  // Pause the game
+            }
+        });
+
+        resumeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameSession.resumeGame();  // Resume the game
+            }
+        });
+
+
+        // Create a control panel to hold the buttons
+        JPanel controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout());
+
+        // Add buttons to the control panel
+        controlPanel.add(stopButton);
+        controlPanel.add(resumeButton);
+
+        // Add the control panel to the GamePanel
+        this.setLayout(new BorderLayout());
+        this.add(controlPanel, BorderLayout.SOUTH);  // Place it at the bottom
     }
 
     @Override
@@ -84,6 +129,7 @@ public class GamePanel extends JPanel implements Runnable{
         Graphics2D g2 = (Graphics2D) g;
 
         // Load GIFs for entities and projectiles using Toolkit from the src/images folder
+        Image backGroundDay = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/backGroundDay.gif"));
         Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
         Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
         Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
@@ -95,8 +141,9 @@ public class GamePanel extends JPanel implements Runnable{
         int projectileHeight = 10;
 
         // Draw the game board
-        g2.setColor(Color.darkGray);
-        g2.fillRect(gameBoard.getPositionX(), gameBoard.getPositionY(), (40 + 20) * 9, (40 + 20) * 5);
+        if (backGroundDay != null) {
+            g2.drawImage(backGroundDay, 0, 0, getWidth(), getHeight(), this);
+        }
 
         // Draw entities with corresponding animated GIFs
         for (EntityActions entity : gameBoard.getEntities()) {

@@ -28,7 +28,6 @@ public class GameBoard extends Container implements IGameBoard {
         this.entities = new ArrayList<>();
         this.projectiles = new ArrayList<>();
         this.braindead = false;
-        Main.createGUI(this);
     }
 
     public boolean addEntity(EntityActions entity) {
