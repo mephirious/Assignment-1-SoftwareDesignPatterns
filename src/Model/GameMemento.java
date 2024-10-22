@@ -1,3 +1,5 @@
+package Model;
+
 interface Memento {
     long getTickNumber();
     boolean isRunning();

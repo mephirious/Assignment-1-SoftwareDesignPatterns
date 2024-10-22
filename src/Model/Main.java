@@ -1,17 +1,18 @@
-import Model.Game;
+package Model;
+
 import View.GamePanel;
 
 import javax.swing.*;
 
 public class Main {
 
-    public static void createGUI(Game game) {
+    public static void createGUI(GameBoard gameBoard) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("Plants vs Zombies");
 
-        GamePanel gamePanel = new GamePanel(game);
+        GamePanel gamePanel = new GamePanel(gameBoard);
         window.add(gamePanel);
         gamePanel.startGameThread();
         window.pack();
@@ -26,7 +27,6 @@ public class Main {
         // TODO: Model.GameBoard Generator, ex Sun value, Plants to plant(with planting cooldown), PlantingGrid(where plants are placed and zombies moving), zombiesPre-Spawning area
         game.createGameSession();
 
-        createGUI(game);
         try {
             game.startGameplay();
         } catch (InterruptedException e) {

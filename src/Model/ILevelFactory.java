@@ -1,4 +1,6 @@
-    import java.util.ArrayList;
+package Model;
+
+import java.util.ArrayList;
     import java.util.List;
 
     public interface ILevelFactory {

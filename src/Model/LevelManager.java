@@ -1,3 +1,5 @@
+package Model;
+
 public class LevelManager {
     private static LevelManager instance;
     private Level currentLevel;

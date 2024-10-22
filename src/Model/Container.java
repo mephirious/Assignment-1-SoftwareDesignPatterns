@@ -1,3 +1,5 @@
+package Model;
+
 public abstract class Container {
     private int positionX;
     private int positionY;

@@ -1,4 +1,6 @@
-    interface IScore {
+package Model;
+
+interface IScore {
         void addScore(int value);
         int getScore();
     }

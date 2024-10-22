@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +61,8 @@ public class Plant extends EntityActions {
     public static class Builder implements IBuilderPlants {
         private int positionX;
         private int positionY;
-        private String name = "Plant name";
-        private String description = "Plant description";
+        private String name = "Model.Plant name";
+        private String description = "Model.Plant description";
         private int health = 0;
         private int damage = 0;
         private Projectile projectile;

@@ -1,3 +1,5 @@
+package Model;
+
 interface Observer {
     void updateHealth(String entityName, int health);
 }

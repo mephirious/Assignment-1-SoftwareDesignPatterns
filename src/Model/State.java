@@ -1,3 +1,5 @@
+package Model;
+
 public interface State {
     void performAction(Plant plant);
 }

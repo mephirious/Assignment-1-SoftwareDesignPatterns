@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class Zombie implements Cloneable {
     }
 
     public void spawn() {
-        System.out.println("Zombie spawned at row: " + row);
+        System.out.println("Model.Zombie spawned at row: " + row);
     }
 
     public void setRow(int row) {
@@ -50,7 +52,7 @@ class NormalZombie extends Zombie {
 
     @Override
     public void spawn() {
-        System.out.println("Normal Zombie spawned at row: " + row);
+        System.out.println("Normal Model.Zombie spawned at row: " + row);
     }
 }
 
@@ -61,7 +63,7 @@ class StrongZombie extends Zombie {
 
     @Override
     public void spawn() {
-        System.out.println("Strong Zombie spawned at row: " + row);
+        System.out.println("Strong Model.Zombie spawned at row: " + row);
     }
 }
 
@@ -72,6 +74,6 @@ class BossZombie extends Zombie {
 
     @Override
     public void spawn() {
-        System.out.println("Boss Zombie spawned at row: " + row);
+        System.out.println("Boss Model.Zombie spawned at row: " + row);
     }
 }

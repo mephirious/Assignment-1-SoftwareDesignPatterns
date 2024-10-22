@@ -1,3 +1,5 @@
+package Model;
+
 class Mushroom {
     public Mushroom(){};
 }

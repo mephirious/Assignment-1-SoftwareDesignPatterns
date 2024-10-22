@@ -1,3 +1,5 @@
+package Model;
+
 interface ICooldown {
     boolean isReady();
     void trigger();

@@ -1,3 +1,5 @@
+package Model;
+
 public class ZombieFactory {
     private static Zombie normalZombiePrototype = new NormalZombie(250);
     private static Zombie strongZombiePrototype = new StrongZombie(500);

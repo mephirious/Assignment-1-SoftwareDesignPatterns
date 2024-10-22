@@ -1,3 +1,5 @@
+package Model;
+
 interface IProjectile {
     Projectile clone();
 }

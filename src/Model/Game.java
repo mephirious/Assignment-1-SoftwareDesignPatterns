@@ -1,6 +1,9 @@
+package Model;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
 
 interface IGame {
     void createGameSession();
@@ -19,7 +22,7 @@ class GameSession {
     private boolean isPaused = false;
 
     public void initialize() {
-        gameBoard = new GameBoard();
+        gameBoard = new GameBoard(60, 100);
         tickNumber = 0;
         isRunning = true;
 
@@ -86,12 +89,12 @@ class GameSession {
     }
 
     private void pauseGame() {
-        System.out.println("Game paused.");
+        System.out.println("Model.Game paused.");
         isPaused = true;
     }
 
     private void resumeGame() {
-        System.out.println("Game resumed.");
+        System.out.println("Model.Game resumed.");
         isPaused = false;
     }
 
@@ -117,7 +120,11 @@ class GameSession {
                     // Execute scheduled commands
                     for (ScheduledCommand scheduledCommand : scheduledCommands) {
                         if (tickNumber % scheduledCommand.getInterval() == 0) {
-                            scheduledCommand.getCommand().execute(gameBoard, 100, 200);
+                            Random rand = new Random();
+                            int x = rand.nextInt(0,9)*(40+20);
+                            int y = rand.nextInt(0,5)*(40+20);
+                            scheduledCommand.getCommand().execute(gameBoard, x+60, y+100);
+                            System.out.println("Created at" + x + ":" + y);
                         }
                     }
 
@@ -163,6 +170,10 @@ public class Game implements IGame {
             gameSession.startGameplay();
         }
     }
+
+    public GameSession getGameSession() {
+        return gameSession;
+    }
 }
 
 class AddPeashooterCommand implements Command {
@@ -173,7 +184,9 @@ class AddPeashooterCommand implements Command {
         peashooter.setPositionY(y);
         peashooter.getProjectile().setPositionX(x);
         peashooter.getProjectile().setPositionY(y);
-        gameBoard.addEntity(peashooter);
+        if (! gameBoard.addEntity(peashooter)) {
+            System.out.println("Cannot create " + peashooter.getName() + " at " + x + ":" +y);
+        }
     }
 }
 
@@ -185,7 +198,9 @@ class AddWallnutCommand implements Command {
         wallnut.setPositionY(y);
         wallnut.getProjectile().setPositionX(x);
         wallnut.getProjectile().setPositionY(y);
-        gameBoard.addEntity(wallnut);
+        if (! gameBoard.addEntity(wallnut)) {
+            System.out.println("Cannot create " + wallnut.getName() + " at " + x + ":" +y);
+        }
     }
 }
 
@@ -197,6 +212,8 @@ class AddSunflowerCommand implements Command {
         sunflower.setPositionY(y);
         sunflower.getProjectile().setPositionX(x);
         sunflower.getProjectile().setPositionY(y);
-        gameBoard.addEntity(sunflower);
+        if (! gameBoard.addEntity(sunflower)) {
+            System.out.println("Cannot create " + sunflower.getName() + " at " + x + ":" +y);
+        }
     }
 }
