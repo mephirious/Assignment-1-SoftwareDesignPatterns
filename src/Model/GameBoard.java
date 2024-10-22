@@ -9,64 +9,84 @@ interface IGameBoard {
     void addProjectile(Projectile projectile);
 }
 
-public class GameBoard extends Container implements IGameBoard {
-    private final List<EntityActions> entities;
-    private final List<Projectile> projectiles;
-    private boolean braindead;
-    /*
-        Tile Size f.e. 40x40px => 360x200px board
-         0 1 2 3 4 5 6 7 8
-      0  * * * * * * * * *
-      1  * * * * * * * * *
-      2  * * * * * * * * *
-      3  * * * * * * * * *
-      4  * * * * * * * * *
+// Facade class that provides a simplified interface to the game subsystem
+class GameFacade {
+    private final GameBoard gameBoard;
+    private final EntityManager entityManager;
+    private final ProjectileManager projectileManager;
 
-     */
-    public GameBoard(int positionX, int positionY) {
-        super( positionX, positionY);
-        this.entities = new ArrayList<>();
-        this.projectiles = new ArrayList<>();
+    public GameFacade(int positionX, int positionY) {
+        this.gameBoard = new GameBoard(positionX, positionY);
+        this.entityManager = new EntityManager(gameBoard);
+        this.projectileManager = new ProjectileManager(gameBoard);
+    }
+
+    // Simplified methods for client code
+    public boolean addEntity(EntityActions entity) {
+        return entityManager.addEntity(entity);
+    }
+
+    public void addProjectile(Projectile projectile) {
+        projectileManager.addProjectile(projectile);
+    }
+
+    public boolean update() {
+        entityManager.updateEntities();
+        projectileManager.updateProjectiles();
+        return !entityManager.isBraindead();
+    }
+}
+
+// Manager class for handling entities
+class EntityManager {
+    private final GameBoard gameBoard;
+    private boolean braindead;
+
+    public EntityManager(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
         this.braindead = false;
     }
 
     public boolean addEntity(EntityActions entity) {
-        for (EntityActions e : entities) {
+        for (EntityActions e : gameBoard.getEntities()) {
             if (e.getPositionX() == entity.getPositionX() &&
-                e.getPositionY() == entity.getPositionY()) {
+                    e.getPositionY() == entity.getPositionY()) {
                 return false;
             }
         }
-        entities.add(entity);
+        gameBoard.getEntities().add(entity);
         return true;
     }
-    public void addProjectile(Projectile projectile) {
-        projectiles.add(projectile);
-    }
 
-    public List<EntityActions> getEntities() {
-        return entities;
-    }
-
-    public List<Projectile> getProjectiles() {
-        return projectiles;
-    }
-
-    // TODO: need to separate shooting, movement, etc .
-    public boolean Tick() {
-        for (EntityActions entity : entities) {
-            entity.update(this);
+    public void updateEntities() {
+        for (EntityActions entity : gameBoard.getEntities()) {
+            entity.update(gameBoard);
 
             if (entity.getPositionX() < -10) {
                 this.braindead = true;
             }
         }
-        updateProjectiles();
-        return !this.braindead;
     }
 
-    private void updateProjectiles() {
-        Iterator<Projectile> iterator = projectiles.iterator();
+    public boolean isBraindead() {
+        return braindead;
+    }
+}
+
+// Manager class for handling projectiles
+class ProjectileManager {
+    private final GameBoard gameBoard;
+
+    public ProjectileManager(GameBoard gameBoard) {
+        this.gameBoard = gameBoard;
+    }
+
+    public void addProjectile(Projectile projectile) {
+        gameBoard.getProjectiles().add(projectile);
+    }
+
+    public void updateProjectiles() {
+        Iterator<Projectile> iterator = gameBoard.getProjectiles().iterator();
         while (iterator.hasNext()) {
             Projectile p = iterator.next();
             p.updatePosition();
@@ -77,6 +97,35 @@ public class GameBoard extends Container implements IGameBoard {
     }
 
     private boolean isOutOfBounds(Projectile p) {
-        return p.getPositionX() < 0 || p.getPositionX() > 800 || p.getPositionY() < 0 || p.getPositionY() > 600;
+        return p.getPositionX() < 0 || p.getPositionX() > 800 ||
+                p.getPositionY() < 0 || p.getPositionY() > 600;
+    }
+}
+
+// Modified GameBoard class
+public class GameBoard extends Container implements IGameBoard {
+    private final List<EntityActions> entities;
+    private final List<Projectile> projectiles;
+
+    public GameBoard(int positionX, int positionY) {
+        super(positionX, positionY);
+        this.entities = new ArrayList<>();
+        this.projectiles = new ArrayList<>();
+    }
+
+    public boolean addEntity(EntityActions entity) {
+        return new EntityManager(this).addEntity(entity);
+    }
+
+    public void addProjectile(Projectile projectile) {
+        new ProjectileManager(this).addProjectile(projectile);
+    }
+
+    public List<EntityActions> getEntities() {
+        return entities;
+    }
+
+    public List<Projectile> getProjectiles() {
+        return projectiles;
     }
 }
