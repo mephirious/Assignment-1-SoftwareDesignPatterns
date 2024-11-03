@@ -14,7 +14,7 @@ class AttackBehavior implements EntityBehavior {
     public void performAction(EntityActions entity, GameBoard gameBoard) {
         Projectile projectile = entity.getProjectile();
         if (projectile != null) {
-            System.out.println(entity.getName() + " is attacking!");
+//            System.out.println(entity.getName() + " is attacking!");
             gameBoard.addProjectile(projectile.clone());
         } else {
             System.out.println(entity.getName() + " cannot attack without a projectile.");
@@ -25,7 +25,7 @@ class AttackBehavior implements EntityBehavior {
 class ProduceSunBehavior implements EntityBehavior {
     @Override
     public void performAction(EntityActions entity, GameBoard gameBoard) {
-        System.out.println(entity.getName() + " is producing sun!");
+//        System.out.println(entity.getName() + " is producing sun!");
         //gameBoard.spawnSun(25);
     }
 }

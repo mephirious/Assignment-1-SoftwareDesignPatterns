@@ -5,17 +5,19 @@ interface IProjectile {
 }
 
 public class Projectile extends Container implements IProjectile{
+    private String name;
     private int directionX;
     private int directionY;
     private int velocityX;
     private int velocityY;
 
-    public Projectile(int positionX, int positionY, int directionX, int directionY, int velocityX, int velocityY) {
+    public Projectile(int positionX, int positionY, int directionX, int directionY, int velocityX, int velocityY, String name) {
         super(positionX, positionY);
         this.directionX = directionX;
         this.directionY = directionY;
         this.velocityX = velocityX;
         this.velocityY = velocityY;
+        this.name = name;
     }
 
     public void setDirectionX(int directionX) { this.directionX = directionX; }
@@ -30,6 +32,7 @@ public class Projectile extends Container implements IProjectile{
         this.velocityY = velocityY;
     }
     public int getVelocityY() { return this.velocityY; }
+    public String getName() { return name; }
 
     public void updatePosition() {
         int newPositionX = getPositionX() + getVelocityX() * getDirectionX();
@@ -45,6 +48,6 @@ public class Projectile extends Container implements IProjectile{
 
     // Prototype design pattern
     public Projectile clone() {
-        return new Projectile(getPositionX(), getPositionY(), getDirectionX(), getDirectionY(), getVelocityX(), getVelocityX());
+        return new Projectile(getPositionX(), getPositionY(), getDirectionX(), getDirectionY(), getVelocityX(), getVelocityX(), getName());
     }
 }

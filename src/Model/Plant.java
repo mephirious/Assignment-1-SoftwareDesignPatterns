@@ -70,10 +70,12 @@ public class Plant extends EntityActions {
         private double averageActionSpeed;
         public Builder setPositionX(int positionX) {
             this.positionX = positionX;
+            this.projectile.setPositionX(positionX);
             return this;
         }
         public Builder setPositionY(int positionY) {
             this.positionY = positionY;
+            this.projectile.setPositionY(positionY);
             return this;
         }
         public Builder setName(String name) {
@@ -111,7 +113,7 @@ public class Plant extends EntityActions {
 
     public static class Director {
         public static Plant constructPeaShooter() {
-            Projectile peaProjectile = new Projectile(0, 0, 1, 0, 5, 5);
+            Projectile peaProjectile = new Projectile(0, 0, 1, 0, 10, 10, "Pea");
             return (new Builder()
                     .setName("Pea Shooter")
                     .setDescription("Peashooters are your first line of defense. They shoot peas at attacking zombies.")
@@ -124,7 +126,7 @@ public class Plant extends EntityActions {
         }
 
         public static Plant constructSunflower() {
-            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0);
+            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0, "Sun");
             return (new Builder()
                     .setName("Sunflower")
                     .setDescription("Sunflowers are essential for you to produce extra sun. Try planting as many as you can!")
@@ -137,7 +139,7 @@ public class Plant extends EntityActions {
         }
 
         public static Plant constructWallNut() {
-            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0);
+            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0, "");
             return (new Builder()
                     .setName("Wall-nut")
                     .setDescription("Wall-nuts have hard shells which you can use to protect your other plants.")

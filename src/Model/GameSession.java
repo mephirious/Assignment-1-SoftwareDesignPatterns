@@ -6,7 +6,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class GameSession {
-    private GameBoard gameBoard;
+    private GameFacade gameFacade;
     private int tickNumber;
     private volatile boolean isRunning;
     private static final int TICK_RATE_MS = 50;
@@ -14,15 +14,15 @@ public class GameSession {
     private boolean isPaused = false;
 
     public void initialize() {
-        gameBoard = new GameBoard(60, 100);
+        gameFacade = new GameFacade(60, 100);
         tickNumber = 0;
         isRunning = true;
 
         scheduledCommands = new ArrayList<>();
         // Schedule commands
-        scheduleCommand(100, new AddPeashooterCommand());
-        scheduleCommand(150, new AddWallnutCommand());
-        scheduleCommand(200, new AddSunflowerCommand());
+        scheduleCommand(10, new AddPeashooterCommand());
+        scheduleCommand(15, new AddWallnutCommand());
+        scheduleCommand(20, new AddSunflowerCommand());
 
 
         Main.createGUI(this);
@@ -39,7 +39,7 @@ public class GameSession {
     }
 
     public GameBoard getGameBoard() {
-        return this.gameBoard;
+        return this.gameFacade.getGameBoard();
     }
 
 
@@ -106,18 +106,6 @@ public class GameSession {
         long lastTime = System.currentTimeMillis();
         startCommandListener();
 
-        // Grid settings
-        int gridRows = 5;
-        int gridColumns = 9;
-        int cellWidth = 100;
-        int cellHeight = 125;
-        int leftMargin = 350; // Distance from the left side of the game board
-        int upperMargin = 125; // Distance from the upper side of the game board
-        int rightMargin = 510; // Distance from the right side of the game board
-
-        // Calculate the usable width of the game board after margins
-        int usableWidth = 1400 - leftMargin - rightMargin; // Total width for the grid
-        int usableHeight = 600 - upperMargin; // Total height for the grid
 
         while (isRunning) {
             if (!isPaused) {
@@ -126,25 +114,23 @@ public class GameSession {
 
                 if (elapsedTime >= TICK_RATE_MS) {
                     tickNumber += 1;
-                    boolean continueGame = gameBoard.Tick();
+
+
+                    boolean continueGame = gameFacade.update();
 
                     // Execute scheduled commands
                     for (ScheduledCommand scheduledCommand : scheduledCommands) {
                         if (tickNumber % scheduledCommand.getInterval() == 0) {
                             // Calculate a random position in the grid
                             Random rand = new Random();
-                            int column = rand.nextInt(gridColumns);
-                            int row = rand.nextInt(gridRows);
+                            int column = rand.nextInt(9);
+                            int row = rand.nextInt(5);
 
-                            // Calculate the x and y positions based on the column and row
-                            int x = leftMargin + column * cellWidth; // Calculate x position
-                            int y = upperMargin + row * cellHeight; // Calculate y position
-
-                            // Ensure that the coordinates are within the game board limits
-                            if (x >= leftMargin && x + cellWidth <= 1400 - rightMargin &&
-                                    y >= upperMargin && y + cellHeight <= 600) {
-                                scheduledCommand.getCommand().execute(gameBoard, x, y);
-                                System.out.println("Created at " + x + ":" + y);
+                            for (int i = 0; i < 1; i++) {
+                                    // Calculate the x and y positions based on the column and row
+                                    int x = rand.nextInt(900); // Calculate x position
+                                    int y = rand.nextInt(600); // Calculate y position
+                                    scheduledCommand.getCommand().execute(gameFacade.getGameBoard(), x, y);
                             }
                         }
                     }
@@ -163,6 +149,4 @@ public class GameSession {
             }
         }
     }
-
-
 }

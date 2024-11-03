@@ -55,7 +55,7 @@ class AddPeashooterCommand implements Command {
         peashooter.getProjectile().setPositionX(x);
         peashooter.getProjectile().setPositionY(y);
         if (! gameBoard.addEntity(peashooter)) {
-            System.out.println("Cannot create " + peashooter.getName() + " at " + x + ":" +y);
+//            System.out.println("Cannot create " + peashooter.getName() + " at " + x + ":" +y);
         }
     }
 }
@@ -69,7 +69,7 @@ class AddWallnutCommand implements Command {
         wallnut.getProjectile().setPositionX(x);
         wallnut.getProjectile().setPositionY(y);
         if (! gameBoard.addEntity(wallnut)) {
-            System.out.println("Cannot create " + wallnut.getName() + " at " + x + ":" +y);
+//            System.out.println("Cannot create " + wallnut.getName() + " at " + x + ":" +y);
         }
     }
 }
@@ -83,7 +83,7 @@ class AddSunflowerCommand implements Command {
         sunflower.getProjectile().setPositionX(x);
         sunflower.getProjectile().setPositionY(y);
         if (! gameBoard.addEntity(sunflower)) {
-            System.out.println("Cannot create " + sunflower.getName() + " at " + x + ":" +y);
+//            System.out.println("Cannot create " + sunflower.getName() + " at " + x + ":" +y);
         }
     }
 }

@@ -21,7 +21,7 @@ public class GamePanel extends JPanel implements Runnable{
     final int tileSize = originalTileSize * scale;
     final int maxScreenCol = 16;
     final int maxScreenRow = 12;
-    final int screenWidth = 1400;
+    final int screenWidth = 900;
     final int screenHeight = 600;
     GameBoard gameBoard;
     KeyHandler keyH = new KeyHandler();
@@ -107,7 +107,6 @@ public class GamePanel extends JPanel implements Runnable{
             }
 
             if (timer >= 1000000000) {
-                System.out.println("FPS:"+drawCount);
                 drawCount = 0;
                 timer = 0;
             }
@@ -133,7 +132,8 @@ public class GamePanel extends JPanel implements Runnable{
         Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
         Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
         Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
-        Image projectileImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
+        Image peaImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
+        Image sunImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sun.gif"));
 
         int entityWidth = 40;
         int entityHeight = 40;
@@ -142,44 +142,69 @@ public class GamePanel extends JPanel implements Runnable{
 
         // Draw the game board
         if (backGroundDay != null) {
-            g2.drawImage(backGroundDay, 0, 0, getWidth(), getHeight(), this);
+            g2.drawImage(backGroundDay, -200, 0, 1400, 600, this);
         }
 
+        int width = 80;
+        int height = 80;
         // Draw entities with corresponding animated GIFs
         for (EntityActions entity : gameBoard.getEntities()) {
-            Image entityImage = null;
+            String entityName = entity.getName();
+            if (entityName == null) {
+                System.out.println("Entity name is null. Skipping rendering for this entity.");
+                continue; // Skip rendering this entity
+            }
 
-            switch (entity.getName()) {
+            Image entityImage = null;
+            switch (entityName) {
                 case "Pea Shooter":
                     entityImage = peaShooterGif;
+                    width = 80;
+                    height = 80;
                     break;
                 case "Sunflower":
                     entityImage = sunflowerGif;
+                    width = 80;
+                    height = 80;
                     break;
                 case "Wall-nut":
                     entityImage = wallNutGif;
+                    width = 140;
+                    height = 140;
                     break;
             }
 
-            // If the image is loaded, draw the animated gif
             if (entityImage != null) {
-                g2.drawImage(entityImage, entity.getPositionX(), entity.getPositionY(), 40, 40, this);
+                g2.drawImage(entityImage, entity.getPositionX()-width/2, entity.getPositionY()-height/2, width, height, this);
             } else {
-                // In case image loading fails, use a fallback color and rectangle
-                g2.setColor(Color.red);  // Default color for missing image
+                g2.setColor(Color.red);
                 g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);
             }
         }
 
+
         // Draw projectiles as images
         for (Projectile projectile : gameBoard.getProjectiles()) {
-            // If the projectile image is loaded, draw it
-            if (projectileImage != null) {
-                g2.drawImage(projectileImage, projectile.getPositionX()+40, projectile.getPositionY()+5, 10, 10, this);
+            String projectileName = projectile.getName();
+            Image projectileImage = null;
+
+            if (projectileName == null) {
+//                System.out.println("Projectile name is null. Skipping rendering for this projectile.");
             } else {
-                // In case the image fails to load, fallback to drawing a green rectangle
+                switch (projectileName) {
+                    case "Pea":
+                        projectileImage = peaImage;
+                        break;
+                }
+            }
+
+            if (projectileImage != null) {
+//                g2.setColor(Color.green);
+//                g2.fillRect(projectile.getPositionX()-width/2 + 50, projectile.getPositionY()-width/2 + 5, 30, 30);
+                g2.drawImage(projectileImage, projectile.getPositionX()-80/2 + 50, projectile.getPositionY()-80/2 + 5, 30, 30, this);
+            } else {
                 g2.setColor(Color.green);
-                g2.fillRect(projectile.getPositionX(), projectile.getPositionY(), 10, 10);
+                g2.fillRect(projectile.getPositionX()-width/2 + 50, projectile.getPositionY()-width/2 + 5, 30, 30);
             }
         }
 
