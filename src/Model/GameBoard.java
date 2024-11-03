@@ -1,5 +1,7 @@
 package Model;
 
+import View.SoundEffect;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
@@ -32,7 +34,7 @@ class GameFacade {
 
     public boolean update() {
         entityManager.updateEntities();
-        projectileManager.updateProjectiles();
+        projectileManager.updateProjectiles(gameBoard.getEntities());
         return !entityManager.isBraindead();
     }
 
@@ -110,10 +112,19 @@ class EntityManager {
 
 
     public void updateEntities() {
-        for (EntityActions entity : gameBoard.getEntities()) {
-            entity.update(gameBoard);
 
-            if (entity.getPositionX() < -10) {
+        Iterator<EntityActions> iterator = gameBoard.getEntities().iterator();
+        while (iterator.hasNext()) {
+            EntityActions e = iterator.next();
+            e.update(gameBoard);
+
+            if (e.getHealth() <= 0) {
+                System.out.println(e.getName() + " i am ded :(");
+                SoundEffect soundEffect = new SoundEffect("/sounds/peaHit.wav");
+                soundEffect.play();
+                iterator.remove();
+            }
+            if (e.getPositionX() < -10) {
                 this.braindead = true;
             }
         }
@@ -136,12 +147,19 @@ class ProjectileManager {
         gameBoard.getProjectiles().add(projectile);
     }
 
-    public void updateProjectiles() {
+    public void updateProjectiles(List<EntityActions> entities) {
         Iterator<Projectile> iterator = gameBoard.getProjectiles().iterator();
         while (iterator.hasNext()) {
             Projectile p = iterator.next();
             p.updatePosition();
-            if (p.checkCollision() || isOutOfBounds(p)) {
+    
+            if (p.checkCollision(entities)) {
+                SoundEffect soundEffect = new SoundEffect("/sounds/peaHit.wav");
+                soundEffect.setVolume(0.1f);
+                soundEffect.play();
+                iterator.remove();
+            }
+            if (isOutOfBounds(p)) {
                 iterator.remove();
             }
         }

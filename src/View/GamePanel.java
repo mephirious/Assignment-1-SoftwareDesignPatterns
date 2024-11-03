@@ -173,9 +173,21 @@ public class GamePanel extends JPanel implements Runnable{
                     height = 140;
                     break;
             }
+            switch (entity.getTeamID()) {
+                case 0 :
+                    g2.setColor(Color.orange);
+                    break;
+                case 1 :
+                    g2.setColor(Color.red);
+                    break;
+            }
 
             if (entityImage != null) {
                 g2.drawImage(entityImage, entity.getPositionX()-width/2, entity.getPositionY()-height/2, width, height, this);
+//                g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);// Draw the HP below the entity image
+                String hpText = "HP: " + entity.getHealth(); // Assuming there's a method getHP() in the entity class
+                g2.drawString(hpText, entity.getPositionX() - 80 / 2, entity.getPositionY() + 80 / 2 + 15); // Adjust the Y position as needed
+
             } else {
                 g2.setColor(Color.red);
                 g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);
@@ -198,10 +210,19 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
 
+            switch (projectile.getTeamID()) {
+                case 0 :
+                    g2.setColor(Color.orange);
+                    break;
+                case 1 :
+                    g2.setColor(Color.red);
+                    break;
+            }
             if (projectileImage != null) {
-//                g2.setColor(Color.green);
 //                g2.fillRect(projectile.getPositionX()-width/2 + 50, projectile.getPositionY()-width/2 + 5, 30, 30);
                 g2.drawImage(projectileImage, projectile.getPositionX()-80/2 + 50, projectile.getPositionY()-80/2 + 5, 30, 30, this);
+//                String hpText = "DMG: " + projectile.getDamage(); // Assuming there's a method getHP() in the entity class
+//                g2.drawString(hpText, projectile.getPositionX() - 30 / 2, projectile.getPositionY() + 30 / 2); // Adjust the Y position as needed
             } else {
                 g2.setColor(Color.green);
                 g2.fillRect(projectile.getPositionX()-width/2 + 50, projectile.getPositionY()-width/2 + 5, 30, 30);

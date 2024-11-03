@@ -19,8 +19,8 @@ public class Plant extends EntityActions {
     private List<Observer> observers = new ArrayList<>();
     private State state;
 
-    public Plant(int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
-        super(positionX, positionY, name, description, health, damage, projectile, behavior);
+    public Plant(int teamID, int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
+        super(teamID, positionX, positionY, name, description, health, damage, projectile, behavior);
         cooldown = new Cooldown(averageActionSpeed);
         this.state = new InactiveState();
     }
@@ -32,9 +32,10 @@ public class Plant extends EntityActions {
         if (cooldown.isReady()) {
             // Execute the attack logic (e.g., shoot a projectile)
             // TODO: Make some changes so it only shoots if triggered.
-            this.getBehavior().performAction(this, gameBoard);
-            // Trigger cooldown
-            cooldown.trigger();
+            if (this.getBehavior().performAction(this, gameBoard)) {
+                // Trigger cooldown
+                cooldown.trigger();
+            };
         } else {
             // On cooldown, cannot attack yet
             // System.out.println("Attack is on cooldown!");
@@ -59,6 +60,7 @@ public class Plant extends EntityActions {
 
 
     public static class Builder implements IBuilderPlants {
+        private int teamID = -1;
         private int positionX;
         private int positionY;
         private String name = "Model.Plant name";
@@ -68,14 +70,16 @@ public class Plant extends EntityActions {
         private Projectile projectile;
         private EntityBehavior behavior = new PassiveBehavior();
         private double averageActionSpeed;
+        public Builder setTeamID(int teamID) {
+            this.teamID = teamID;
+            return this;
+        }
         public Builder setPositionX(int positionX) {
             this.positionX = positionX;
-            this.projectile.setPositionX(positionX);
             return this;
         }
         public Builder setPositionY(int positionY) {
             this.positionY = positionY;
-            this.projectile.setPositionY(positionY);
             return this;
         }
         public Builder setName(String name) {
@@ -107,7 +111,7 @@ public class Plant extends EntityActions {
             return this;
         }
         public Plant build() {
-            return new Plant(positionX, positionY, name, description, health, damage, projectile, behavior, averageActionSpeed);
+            return new Plant(teamID, positionX, positionY, name, description, health, damage, projectile, behavior, averageActionSpeed);
         }
     }
 
@@ -118,8 +122,9 @@ public class Plant extends EntityActions {
                     .setName("Pea Shooter")
                     .setDescription("Peashooters are your first line of defense. They shoot peas at attacking zombies.")
                     .setHealth(300)
-                    .setDamage(20)
+                    .setDamage(200)
                     .setAverageActionSpeed(1.425)
+                    .setTeamID(0)
                     .setProjectile(peaProjectile)
                     .setBehavior(new AttackBehavior())
                     .build());
@@ -131,8 +136,9 @@ public class Plant extends EntityActions {
                     .setName("Sunflower")
                     .setDescription("Sunflowers are essential for you to produce extra sun. Try planting as many as you can!")
                     .setHealth(300)
-                    .setDamage(0)
+                    .setDamage(30)
                     .setAverageActionSpeed(24.25)
+                    .setTeamID(2)
                     .setProjectile(peaProjectile)
                     .setBehavior(new ProduceSunBehavior())
                     .build());
@@ -141,11 +147,13 @@ public class Plant extends EntityActions {
         public static Plant constructWallNut() {
             Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0, "");
             return (new Builder()
+                    .setTeamID(0)
                     .setName("Wall-nut")
                     .setDescription("Wall-nuts have hard shells which you can use to protect your other plants.")
                     .setHealth(4000)
-                    .setDamage(0)
+                    .setDamage(40)
                     .setAverageActionSpeed(0)
+                    .setTeamID(1)
                     .setProjectile(peaProjectile)
                     .build());
         }
