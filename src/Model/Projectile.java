@@ -55,7 +55,7 @@ public class Projectile extends Container implements IProjectile{
                 // Implement your collision detection logic here
                 if (isCollidingWith(entity)) {
                     entity.reduceHealth(this.damage);
-                    System.out.println(entity.getName() + " took damage of " + this.damage);
+//                    System.out.println(entity.getName() + " took damage of " + this.damage);
                     return true; // Collision detected
                 }
             }
