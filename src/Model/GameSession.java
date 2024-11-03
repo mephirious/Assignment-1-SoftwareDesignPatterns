@@ -118,22 +118,22 @@ public class GameSession {
 
                     boolean continueGame = gameFacade.update();
 
-                    // Execute scheduled commands
-                    for (ScheduledCommand scheduledCommand : scheduledCommands) {
-                        if (tickNumber % scheduledCommand.getInterval() == 0) {
-                            // Calculate a random position in the grid
-                            Random rand = new Random();
-                            int column = rand.nextInt(9);
-                            int row = rand.nextInt(5);
-
-                            for (int i = 0; i < 1; i++) {
-                                    // Calculate the x and y positions based on the column and row
-                                    int x = rand.nextInt(900); // Calculate x position
-                                    int y = rand.nextInt(600); // Calculate y position
-                                    scheduledCommand.getCommand().execute(gameFacade.getGameBoard(), x, y);
-                            }
-                        }
-                    }
+//                    // Execute scheduled commands
+//                    for (ScheduledCommand scheduledCommand : scheduledCommands) {
+//                        if (tickNumber % scheduledCommand.getInterval() == 0) {
+//                            // Calculate a random position in the grid
+//                            Random rand = new Random();
+//                            int column = rand.nextInt(9);
+//                            int row = rand.nextInt(5);
+//
+//                            for (int i = 0; i < 1; i++) {
+//                                    // Calculate the x and y positions based on the column and row
+//                                    int x = rand.nextInt(900); // Calculate x position
+//                                    int y = rand.nextInt(600); // Calculate y position
+//                                    scheduledCommand.getCommand().execute(gameFacade.getGameBoard(), x, y);
+//                            }
+//                        }
+//                    }
 
                     if (!continueGame) {
                         isRunning = false;

@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class GamePanel extends JPanel implements Runnable{
 
@@ -19,8 +21,6 @@ public class GamePanel extends JPanel implements Runnable{
     final int scale = 3;
 
     final int tileSize = originalTileSize * scale;
-    final int maxScreenCol = 16;
-    final int maxScreenRow = 12;
     final int screenWidth = 900;
     final int screenHeight = 600;
     GameBoard gameBoard;
@@ -44,6 +44,12 @@ public class GamePanel extends JPanel implements Runnable{
 
         // Create the control buttons and add action listeners
         setupControlButtons();
+        setupMouseListener();
+
+        // Add the plant selection menu
+        PlantSelectionMenu plantSelectionMenu = new PlantSelectionMenu(this);
+        this.add(plantSelectionMenu, BorderLayout.NORTH); // Add it at the top
+
     }
 
     private void setupControlButtons() {
@@ -231,5 +237,44 @@ public class GamePanel extends JPanel implements Runnable{
 
         // Ensure the component keeps repainting to animate the GIFs
         Toolkit.getDefaultToolkit().sync(); // Synchronizes for smooth animation
+    }
+
+    private String currentPlant = null; // The currently selected plant type
+
+    public void setCurrentPlant(String plantName) {
+        this.currentPlant = plantName; // Set the currently selected plant
+    }
+
+    private void setupMouseListener() {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (currentPlant != null) {
+                    int x = e.getX()+40;
+                    int y = e.getY()+40;
+                    placePlant(currentPlant, x, y); // Place the selected plant
+                }
+            }
+        });
+    }
+
+    private void placePlant(String plantName, int x, int y) {
+        // Use the command pattern to add the selected plant to the game board
+        Command command;
+        switch (plantName) {
+            case "Peashooter":
+                command = new AddPeashooterCommand();
+                break;
+            case "Wall-nut":
+                command = new AddWallnutCommand();
+                break;
+            case "Sunflower":
+                command = new AddSunflowerCommand();
+                break;
+            // Add cases for other plants as needed
+            default:
+                return; // Invalid plant name
+        }
+        command.execute(gameBoard, x, y); // Execute the command to place the plant
     }
 }

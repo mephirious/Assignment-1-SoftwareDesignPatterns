@@ -12,20 +12,20 @@ interface EntityBehavior {
     boolean performAction(EntityActions entity, GameBoard gameBoard);
 }
 
-class AttackAndMoveBehavior implements EntityBehavior {
-    @Override
-    public boolean performAction(EntityActions entity, GameBoard gameBoard) {
-        Projectile projectile = entity.getProjectile();
-        if (projectile != null) {
-//            System.out.println(entity.getName() + " is attacking!");
-            gameBoard.addProjectile(projectile.clone());
-            return true;
-        } else {
-            System.out.println(entity.getName() + " cannot attack without a projectile.");
-            return false;
-        }
-    }
-}
+//class AttackAndMoveBehavior implements EntityBehavior {
+//    @Override
+//    public boolean performAction(EntityActions entity, GameBoard gameBoard) {
+//        Projectile projectile = entity.getProjectile();
+//        if (projectile != null) {
+////            System.out.println(entity.getName() + " is attacking!");
+//            gameBoard.addProjectile(projectile.clone());
+//            return true;
+//        } else {
+//            System.out.println(entity.getName() + " cannot attack without a projectile.");
+//            return false;
+//        }
+//    }
+//}
 
 class AttackBehavior implements EntityBehavior {
     @Override
@@ -34,39 +34,36 @@ class AttackBehavior implements EntityBehavior {
         projectile.setDamage(entity.getDamage());
         projectile.setTeamID(entity.getTeamID());
 
-        if (projectile != null) {
-            // Calculate the end position of the projectile based on its velocity and direction
-            double endPositionX = projectile.getPositionX() + projectile.getVelocityX() * projectile.getDirectionX();
-            double endPositionY = projectile.getPositionY() + projectile.getVelocityY() * projectile.getDirectionY();
+        // Calculate the end position of the projectile based on its velocity and direction
+        double endPositionX = projectile.getPositionX() + projectile.getVelocityX() * projectile.getDirectionX();
+        double endPositionY = projectile.getPositionY() + projectile.getVelocityY() * projectile.getDirectionY();
 
-            // Check if there is an enemy entity on the line of the projectile's movement
-            boolean enemyFound = false;
-            for (Entity otherEntity : gameBoard.getEntities()) {
-                if (otherEntity.getTeamID() != entity.getTeamID()) {
-                    // Check if the other entity is on the line of the projectile's movement
-                    if (isEntityOnLine(otherEntity, projectile.getPositionX(), projectile.getPositionY(), endPositionX, endPositionY)) {
-                        // Check if the enemy is in the forward direction of the projectile
-                        if (isEnemyInForwardDirection(projectile, otherEntity)) {
-                            enemyFound = true;
-                            break;
-                        }
+        // Check if there is an enemy entity on the line of the projectile's movement
+        boolean enemyFound = false;
+        for (Entity otherEntity : gameBoard.getEntities()) {
+            if (otherEntity.getTeamID() != entity.getTeamID()) {
+                // Check if the other entity is on the line of the projectile's movement
+                if (isEntityOnLine(otherEntity, projectile.getPositionX(), projectile.getPositionY(), endPositionX, endPositionY)) {
+                    // Check if the enemy is in the forward direction of the projectile
+                    if (isEnemyInForwardDirection(projectile, otherEntity)) {
+                        enemyFound = true;
+                        break;
                     }
                 }
             }
-
-            if (enemyFound) {
-                // Proceed with adding the projectile to the game board
-                gameBoard.addProjectile(projectile.clone());
-                SoundEffect soundEffect = new SoundEffect("/sounds/pea.wav");
-                soundEffect.setVolume(0.2f);
-                soundEffect.play();
-                return true;
-            } else {
-//                System.out.println(entity.getName() + " cannot attack without an enemy in range.");
-            }
-        } else {
-            System.out.println(entity.getName() + " cannot attack without a projectile.");
         }
+
+        if (enemyFound) {
+            // Proceed with adding the projectile to the game board
+            gameBoard.addProjectile(projectile.clone());
+            SoundEffect soundEffect = new SoundEffect("/sounds/pea.wav");
+            soundEffect.setVolume(0.2f);
+            soundEffect.play();
+            return true;
+        }
+//            else {
+//                System.out.println(entity.getName() + " cannot attack without an enemy in range.");
+//            }
         return false;
     }
 
@@ -100,7 +97,7 @@ class AttackBehavior implements EntityBehavior {
 class ProduceSunBehavior implements EntityBehavior {
     @Override
     public boolean performAction(EntityActions entity, GameBoard gameBoard) {
-//        System.out.println(entity.getName() + " is producing sun!");
+        System.out.println(entity.getName() + " is producing sun!");
         //gameBoard.spawnSun(25);
         return true;
     }
@@ -125,7 +122,7 @@ class Entity extends Container {
     private int damage;
     List<Observer> observers = new ArrayList<>();
 
-    public Entity(int teamID, int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile) {
+    public Entity(int teamID, int positionX, int positionY, String name, String description, int health, int damage) {
         super(positionX, positionY);
         this.teamID = teamID;
         this.name = name;
@@ -152,7 +149,7 @@ public abstract class EntityActions extends Entity implements Actions {
     private EntityBehavior behavior;
 
     public EntityActions(int teamID, int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile, EntityBehavior behavior) {
-        super(teamID, positionX, positionY, name, description, health, damage, projectile);
+        super(teamID, positionX, positionY, name, description, health, damage);
         this.projectile = projectile;
         this.behavior = behavior;
     }

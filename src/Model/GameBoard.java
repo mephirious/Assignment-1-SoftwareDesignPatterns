@@ -23,15 +23,6 @@ class GameFacade {
         this.projectileManager = new ProjectileManager(gameBoard);
     }
 
-    // Simplified methods for client code
-    public boolean addEntity(EntityActions entity) {
-        return entityManager.addEntity(entity);
-    }
-
-    public void addProjectile(Projectile projectile) {
-        projectileManager.addProjectile(projectile);
-    }
-
     public boolean update() {
         entityManager.updateEntities();
         projectileManager.updateProjectiles(gameBoard.getEntities());
@@ -56,17 +47,11 @@ class EntityManager {
     public boolean addEntity(EntityActions entity) {
 
         // Grid settings
-        int gridRows = 5;
-        int gridColumns = 9;
         int cellWidth = 80;
         int cellHeight = 100;
         int leftMargin = 100; // Distance from the left side of the game board
         int upperMargin = 120; // Distance from the upper side of the game board
-        int rightMargin = 50; // Distance from the right side of the game board
-
-        // Calculate the usable width and height of the game board after margins
-        int usableWidth = 900 - leftMargin - rightMargin;
-        int usableHeight = 600 - upperMargin;
+        int rightMargin = 0; // Distance from the right side of the game board
 
         // Get the x and y coordinates from the entity's current position
         int x = entity.getPositionX();
@@ -182,7 +167,7 @@ public class GameBoard extends Container implements IGameBoard {
     }
 
     public boolean addEntity(EntityActions entity) {
-        return new EntityManager(this).addEntity(entity);
+        return !new EntityManager(this).addEntity(entity);
     }
 
     public void addProjectile(Projectile projectile) {
