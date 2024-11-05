@@ -1,6 +1,4 @@
-# Plants vs. Zombies Game: Design Patterns Implementation
-
-## About Our Project
+# Plants vs. Zombies Game: Design Patterns
 
 This project is an end-term assignment for our Software Design Patterns course, where we implement a simplified version of the popular game "Plants vs. Zombies." The game utilizes various design patterns to enhance its structure, flexibility, and maintainability.
 
@@ -25,7 +23,7 @@ This project is an end-term assignment for our Software Design Patterns course, 
 3. Factory Method
 4. Prototype
 
-## Application of Behavioral Patterns (15%)
+## Application of Behavioral Patterns
 
 1. Command
 2. Observer
