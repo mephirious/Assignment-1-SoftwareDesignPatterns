@@ -121,7 +121,63 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update() {
+        moveWallNutTowardsPeaShooter();
     }
+
+    private void moveWallNutTowardsPeaShooter() {
+        EntityActions wallNut = null;
+        EntityActions peaShooter = null;
+
+        // Find the Wall-nut and Pea Shooter in the game board
+        for (EntityActions entity : gameBoard.getEntities()) {
+            if ("Wall-nut".equals(entity.getName())) {
+                wallNut = entity;
+            } else if ("Pea Shooter".equals(entity.getName())) {
+                peaShooter = entity;
+            }
+        }
+
+        // If both entities are found, move the Wall-nut towards the Pea Shooter
+        if (wallNut != null) {
+            int wallNutX = wallNut.getPositionX();
+            int wallNutY = wallNut.getPositionY();
+
+            // Move the Wall-nut towards the right side of the screen
+            if (wallNutX < screenWidth) {
+                wallNut.setPositionX(wallNutX - 1); // Move right
+            } else {
+                // If Wall-nut reaches the right edge of the screen, end the game
+                endGame("Game Ended");
+                gameSession.pauseGame();
+                return;
+            }
+
+            // Check for collision with Pea Shooter
+            if (peaShooter != null) {
+                int peaShooterX = peaShooter.getPositionX();
+                int peaShooterY = peaShooter.getPositionY();
+
+                // Simple collision detection based on positions
+                if (wallNutX + 80 > peaShooterX && wallNutX < peaShooterX + 80 &&
+                        wallNutY + 140 > peaShooterY && wallNutY < peaShooterY + 80) {
+                    // Remove the Pea Shooter and end the game
+                    removeEntity(peaShooter);
+                    endGame("Pea Shooter has been destroyed!");
+                }
+            }
+        }
+    }
+
+    public void endGame(String message) {
+        // Logic to stop the game, show message, and possibly reset game state
+        JOptionPane.showMessageDialog(null, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
+        // Optionally: Reset the game or exit
+    }
+
+    public void removeEntity(EntityActions entity) {
+        gameBoard.getEntities().remove(entity); // Assuming entities is a List<EntityActions>
+    }
+
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -137,7 +193,7 @@ public class GamePanel extends JPanel implements Runnable{
         Image backGroundDay = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/backGroundDay.gif"));
         Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
         Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
-        Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
+        Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/zombie.gif"));
         Image peaImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
         Image sunImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sun.gif"));
 
