@@ -1,9 +1,9 @@
 package Model;
 
-public class AddWallnutCommand implements Command {
+public class AddAdaynutCommand implements Command {
     @Override
     public void execute(GameBoard gameBoard, int x, int y) {
-        Plant wallnut = Plant.Director.constructWallNut();
+        Plant wallnut = Plant.Director.constructAdayNut();
         wallnut.setPositionX(x);
         wallnut.setPositionY(y);
         wallnut.getProjectile().setPositionX(x);
@@ -13,4 +13,3 @@ public class AddWallnutCommand implements Command {
         }
     }
 }
-

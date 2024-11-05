@@ -19,5 +19,9 @@ public class PlantSelectionMenu extends JPanel {
         JButton sunflowerButton = new JButton("Sunflower");
         sunflowerButton.addActionListener(e -> gamePanel.setCurrentPlant("Sunflower"));
         add(sunflowerButton);
+
+        JButton adaynutButton = new JButton("Aday-nut");
+        adaynutButton.addActionListener(e -> gamePanel.setCurrentPlant("Aday-nut"));
+        add(adaynutButton);
     }
 }
