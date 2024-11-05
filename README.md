@@ -9,6 +9,39 @@ This project is an end-term assignment for our Software Design Patterns course, 
 - **Nursilam Sheri**
 - **Class:** SE-2325
 
+## File Structure
+
+The project is organized as follows:
+
+├───.idea
+│   └───inspectionProfiles
+├───out
+│   └───production
+│       └───Software-Design-Patterns
+│           ├───images
+│           ├───Model
+│           ├───sounds
+│           └───View
+└───src
+├───images
+├───Model
+├───sounds
+└───View
+
+
+- **.idea/**: Contains configuration files for the IDE.
+- **out/**: Compiled production files, including resources like images and sounds.
+- **src/**: The source files for the project, organized into subdirectories for images, model classes, sounds, and view components.
+
+
+## Architecture
+
+We have utilized the **MVVM (Model-View-ViewModel)** architectural pattern to separate the development concerns in our application:
+- **Model**: Represents the data and business logic of the game.
+- **View**: The UI components that display the game.
+- **ViewModel**: Acts as a bridge between the Model and View, managing the data and UI state.
+
+
 ## Application of Structural Patterns 
 
 1. Facade
