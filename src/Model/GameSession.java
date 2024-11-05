@@ -1,5 +1,7 @@
 package Model;
 
+import View.GamePanel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -137,6 +139,7 @@ public class GameSession {
 
                     if (!continueGame) {
                         isRunning = false;
+                        GamePanel.endGame("Aday ate your brain!");
                         break;
                     }
                     lastTime = currentTime;

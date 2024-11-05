@@ -121,54 +121,10 @@ public class GamePanel extends JPanel implements Runnable{
     }
 
     public void update() {
-        moveWallNutTowardsPeaShooter();
+
     }
 
-    private void moveWallNutTowardsPeaShooter() {
-        EntityActions wallNut = null;
-        EntityActions peaShooter = null;
-
-        // Find the Wall-nut and Pea Shooter in the game board
-        for (EntityActions entity : gameBoard.getEntities()) {
-            if ("Wall-nut".equals(entity.getName())) {
-                wallNut = entity;
-            } else if ("Pea Shooter".equals(entity.getName())) {
-                peaShooter = entity;
-            }
-        }
-
-        // If both entities are found, move the Wall-nut towards the Pea Shooter
-        if (wallNut != null) {
-            int wallNutX = wallNut.getPositionX();
-            int wallNutY = wallNut.getPositionY();
-
-            // Move the Wall-nut towards the right side of the screen
-            if (wallNutX < screenWidth) {
-                wallNut.setPositionX(wallNutX - 1); // Move right
-            } else {
-                // If Wall-nut reaches the right edge of the screen, end the game
-                endGame("Game Ended");
-                gameSession.pauseGame();
-                return;
-            }
-
-            // Check for collision with Pea Shooter
-            if (peaShooter != null) {
-                int peaShooterX = peaShooter.getPositionX();
-                int peaShooterY = peaShooter.getPositionY();
-
-                // Simple collision detection based on positions
-                if (wallNutX + 80 > peaShooterX && wallNutX < peaShooterX + 80 &&
-                        wallNutY + 140 > peaShooterY && wallNutY < peaShooterY + 80) {
-                    // Remove the Pea Shooter and end the game
-                    removeEntity(peaShooter);
-                    endGame("Pea Shooter has been destroyed!");
-                }
-            }
-        }
-    }
-
-    public void endGame(String message) {
+    public static void endGame(String message) {
         // Logic to stop the game, show message, and possibly reset game state
         JOptionPane.showMessageDialog(null, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
         // Optionally: Reset the game or exit
@@ -193,7 +149,8 @@ public class GamePanel extends JPanel implements Runnable{
         Image backGroundDay = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/backGroundDay.gif"));
         Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
         Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
-        Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/zombie.gif"));
+        Image adaynutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/zombie.gif"));
+        Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
         Image peaImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
         Image sunImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sun.gif"));
 
@@ -221,31 +178,29 @@ public class GamePanel extends JPanel implements Runnable{
             switch (entityName) {
                 case "Pea Shooter":
                     entityImage = peaShooterGif;
-                    width = 80;
-                    height = 80;
                     break;
                 case "Sunflower":
                     entityImage = sunflowerGif;
-                    width = 80;
-                    height = 80;
                     break;
                 case "Wall-nut":
                     entityImage = wallNutGif;
-                    width = 140;
-                    height = 140;
                     break;
-            }
-            switch (entity.getTeamID()) {
-                case 0 :
-                    g2.setColor(Color.orange);
-                    break;
-                case 1 :
-                    g2.setColor(Color.red);
+                case "Aday-nut":
+                    entityImage = adaynutGif;
                     break;
             }
 
             if (entityImage != null) {
-                g2.drawImage(entityImage, entity.getPositionX()-width/2, entity.getPositionY()-height/2, width, height, this);
+                switch (entity.getTeamID()) {
+                    case 0 :
+                        g2.setColor(Color.orange);
+                        break;
+                    default:
+                        g2.setColor(Color.red);
+                        break;
+                }
+//                g2.fillRect(entity.getPositionX(), entity.getPositionY(), entity.getWidth(), entity.getHeight());
+                g2.drawImage(entityImage, entity.getPositionX(), entity.getPositionY(), entity.getWidth(), entity.getHeight(), this);
 //                g2.fillRect(entity.getPositionX(), entity.getPositionY(), 40, 40);// Draw the HP below the entity image
                 String hpText = "HP: " + entity.getHealth(); // Assuming there's a method getHP() in the entity class
                 g2.drawString(hpText, entity.getPositionX() - 80 / 2, entity.getPositionY() + 80 / 2 + 15); // Adjust the Y position as needed
@@ -272,17 +227,18 @@ public class GamePanel extends JPanel implements Runnable{
                 }
             }
 
-            switch (projectile.getTeamID()) {
-                case 0 :
-                    g2.setColor(Color.orange);
-                    break;
-                case 1 :
-                    g2.setColor(Color.red);
-                    break;
-            }
             if (projectileImage != null) {
+                switch (projectile.getTeamID()) {
+                    case 0 :
+                        g2.setColor(Color.orange);
+                        break;
+                    default:
+                        g2.setColor(Color.red);
+                        break;
+                }
 //                g2.fillRect(projectile.getPositionX()-width/2 + 50, projectile.getPositionY()-width/2 + 5, 30, 30);
-                g2.drawImage(projectileImage, projectile.getPositionX()-80/2 + 50, projectile.getPositionY()-80/2 + 5, 30, 30, this);
+//                g2.fillRect(projectile.getPositionX(), projectile.getPositionY(), projectile.getWidth(), projectile.getHeight());
+                g2.drawImage(projectileImage, projectile.getPositionX(), projectile.getPositionY(), projectile.getWidth(), projectile.getHeight(), this);
 //                String hpText = "DMG: " + projectile.getDamage(); // Assuming there's a method getHP() in the entity class
 //                g2.drawString(hpText, projectile.getPositionX() - 30 / 2, projectile.getPositionY() + 30 / 2); // Adjust the Y position as needed
             } else {
@@ -326,6 +282,9 @@ public class GamePanel extends JPanel implements Runnable{
                 break;
             case "Sunflower":
                 command = new AddSunflowerCommand();
+                break;
+            case "Aday-nut":
+                command = new AddAdaynutCommand();
                 break;
             // Add cases for other plants as needed
             default:

@@ -5,6 +5,7 @@ import View.SoundEffect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 interface IGameBoard {
     boolean addEntity(EntityActions entity);
@@ -49,8 +50,8 @@ class EntityManager {
         // Grid settings
         int cellWidth = 80;
         int cellHeight = 100;
-        int leftMargin = 100; // Distance from the left side of the game board
-        int upperMargin = 120; // Distance from the upper side of the game board
+        int leftMargin = 60; // Distance from the left side of the game board
+        int upperMargin = 80; // Distance from the upper side of the game board
         int rightMargin = 0; // Distance from the right side of the game board
 
         // Get the x and y coordinates from the entity's current position
@@ -59,11 +60,11 @@ class EntityManager {
 
         // Ensure that the coordinates are within the game board limits
         if (x >= leftMargin && x + cellWidth <= 900 - rightMargin &&
-                y >= upperMargin && y + cellHeight / 2 <= 700) {
+                y >= upperMargin && y + cellHeight / 2 <= 650) {
 
             // Calculate the grid cell coordinates for the entity's position
-            int col = (x - leftMargin) / cellWidth;
-            int row = (y - upperMargin) / cellHeight;
+            int col = (x - 100) / cellWidth;
+            int row = (y - 120) / cellHeight;
 
             // Snap the entity's position to the nearest cell in the grid
             int snappedX = leftMargin + col * cellWidth;
@@ -97,6 +98,7 @@ class EntityManager {
 
 
     public void updateEntities() {
+        List<EntityActions> toRemove = new ArrayList<>();
 
         Iterator<EntityActions> iterator = gameBoard.getEntities().iterator();
         while (iterator.hasNext()) {
@@ -107,13 +109,17 @@ class EntityManager {
                 System.out.println(e.getName() + " i am ded :(");
                 SoundEffect soundEffect = new SoundEffect("/sounds/peaHit.wav");
                 soundEffect.play();
-                iterator.remove();
+                toRemove.add(e);
             }
             if (e.getPositionX() < -10) {
                 this.braindead = true;
             }
         }
+
+        // Remove entities outside of the iteration loop
+        gameBoard.getEntities().removeAll(toRemove);
     }
+
 
     public boolean isBraindead() {
         return braindead;
@@ -157,12 +163,12 @@ class ProjectileManager {
 }
 
 public class GameBoard extends Container implements IGameBoard {
-    private final List<EntityActions> entities;
-    private final List<Projectile> projectiles;
+    private final CopyOnWriteArrayList<EntityActions> entities;
+    private final ArrayList<Projectile> projectiles;
 
     public GameBoard(int positionX, int positionY) {
-        super(positionX, positionY);
-        this.entities = new ArrayList<>();
+        super(positionX, positionY, 900, 600);
+        this.entities = new CopyOnWriteArrayList<>();
         this.projectiles = new ArrayList<>();
     }
 

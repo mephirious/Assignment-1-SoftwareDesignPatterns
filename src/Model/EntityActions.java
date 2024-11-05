@@ -12,20 +12,57 @@ interface EntityBehavior {
     boolean performAction(EntityActions entity, GameBoard gameBoard);
 }
 
-//class AttackAndMoveBehavior implements EntityBehavior {
-//    @Override
-//    public boolean performAction(EntityActions entity, GameBoard gameBoard) {
-//        Projectile projectile = entity.getProjectile();
-//        if (projectile != null) {
-////            System.out.println(entity.getName() + " is attacking!");
-//            gameBoard.addProjectile(projectile.clone());
-//            return true;
-//        } else {
-//            System.out.println(entity.getName() + " cannot attack without a projectile.");
-//            return false;
-//        }
-//    }
-//}
+class AttackAndMoveBehavior implements EntityBehavior {
+    @Override
+    public boolean performAction(EntityActions entity, GameBoard gameBoard) {
+        // Create a static projectile at the zombie's current position
+        Projectile projectile = entity.getProjectile();
+        projectile.setDamage(entity.getDamage());
+        projectile.setTeamID(entity.getTeamID());
+
+        // Set the projectile's position to the zombie's current position
+
+
+
+        // Check if there is an enemy entity nearby for the zombie to attack
+        boolean enemyInRange = false;
+        for (EntityActions otherEntity : gameBoard.getEntities()) {
+            if (otherEntity.getTeamID() != entity.getTeamID()) {
+                // Check if the enemy is within a certain range
+                if (isEnemyNearby(entity, otherEntity)) {
+                    enemyInRange = true;
+                    break;
+                }
+            }
+        }
+
+        if (enemyInRange) {
+            // Add the stationary projectile to the game board
+            gameBoard.addProjectile(projectile.clone(entity.getPositionX(), entity.getPositionY()));
+            SoundEffect soundEffect = new SoundEffect("/sounds/zombieAttack.wav");
+            soundEffect.setVolume(0.1f);
+            soundEffect.play();
+            return true;
+        } else {
+            // Move the zombie if no enemy is nearby
+            System.out.println("Moving " + entity.getName() + " to position " + entity.getPositionX());
+            entity.updatePosition();
+        }
+
+        return false;
+    }
+
+    // Helper method to check if an enemy is within a certain range
+    private boolean isEnemyNearby(EntityActions entity, EntityActions otherEntity) {
+        double rangeThreshold = 5.0;  // Adjust this range as needed
+
+        double deltaX = entity.getPositionX() - otherEntity.getPositionX();
+        double deltaY = entity.getPositionY() - otherEntity.getPositionY();
+        double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+        return distance <= rangeThreshold;
+    }
+}
 
 class AttackBehavior implements EntityBehavior {
     @Override
@@ -55,7 +92,7 @@ class AttackBehavior implements EntityBehavior {
 
         if (enemyFound) {
             // Proceed with adding the projectile to the game board
-            gameBoard.addProjectile(projectile.clone());
+            gameBoard.addProjectile(projectile.clone(50, 5));
             SoundEffect soundEffect = new SoundEffect("/sounds/pea.wav");
             soundEffect.setVolume(0.2f);
             soundEffect.play();
@@ -119,8 +156,8 @@ class Entity extends Container {
     private int damage;
     List<Observer> observers = new ArrayList<>();
 
-    public Entity(int teamID, int positionX, int positionY, String name, String description, int health, int damage) {
-        super(positionX, positionY);
+    public Entity(int teamID, int positionX, int positionY, int width, int height, String name, String description, int health, int damage) {
+        super(positionX, positionY, width, height);
         this.teamID = teamID;
         this.name = name;
         this.description = description;
@@ -145,8 +182,8 @@ public abstract class EntityActions extends Entity implements Actions {
     private Projectile projectile;
     private EntityBehavior behavior;
 
-    public EntityActions(int teamID, int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile, EntityBehavior behavior) {
-        super(teamID, positionX, positionY, name, description, health, damage);
+    public EntityActions(int teamID, int positionX, int positionY, int width, int height, String name, String description, int health, int damage, Projectile projectile, EntityBehavior behavior) {
+        super(teamID, positionX, positionY, width, height, name, description, health, damage);
         this.projectile = projectile;
         this.behavior = behavior;
     }

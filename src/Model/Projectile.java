@@ -3,51 +3,28 @@ package Model;
 import java.util.List;
 
 interface IProjectile {
-    Projectile clone();
+    Projectile clone(int marginX, int marginY);
 }
 
 public class Projectile extends Container implements IProjectile{
     private String name;
     private int damage;
     private int teamID;
-    private int directionX;
-    private int directionY;
-    private int velocityX;
-    private int velocityY;
 
     public Projectile(int positionX, int positionY, int directionX, int directionY, int velocityX, int velocityY, String name) {
-        super(positionX, positionY);
-        this.directionX = directionX;
-        this.directionY = directionY;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
+        super(positionX, positionY, 30, 30);
+        setVelocityX(velocityX);
+        setVelocityY(velocityY);
+        setDirectionX(directionX);
+        setDirectionY(directionY);
         this.name = name;
         this.damage = 0;
     }
     public void setTeamID(int teamID) { this.teamID = teamID; }
     public int getTeamID() { return teamID; }
-    public void setDirectionX(int directionX) { this.directionX = directionX; }
-    public int getDirectionX() { return this.directionX; }
-    public void setDirectionY(int directionY) { this.directionY = directionY; }
-    public int getDirectionY() { return this.directionY; }
-    public void setVelocityX(int velocityX) {
-        this.velocityX = velocityX;
-    }
-    public int getVelocityX() { return this.velocityX; }
-    public void setVelocityY(int velocityY) {
-        this.velocityY = velocityY;
-    }
-    public int getVelocityY() { return this.velocityY; }
     public String getName() { return name; }
     public void setDamage(int damage) { this.damage = damage; }
     public int getDamage() { return damage; }
-
-    public void updatePosition() {
-        int newPositionX = getPositionX() + getVelocityX() * getDirectionX();
-        int newPositionY = getPositionY() + getVelocityY() * getDirectionY();
-        setPositionX(newPositionX);
-        setPositionY(newPositionY);
-    }
 
     public boolean checkCollision(List<EntityActions> entities) {
         for (EntityActions entity : entities) {
@@ -64,19 +41,29 @@ public class Projectile extends Container implements IProjectile{
     }
 
     private boolean isCollidingWith(EntityActions entity) {
-        // Implement your specific collision detection logic
-        // For example, check if the projectile's position overlaps with the entity's position
-        if (this.getPositionY() == entity.getPositionY()) {
-            if (this.getPositionX() == entity.getPositionX()) {
-                return true; // Placeholder
-            }
-        }
-        return false; // Placeholder
+        // Get this entity's position and dimensions
+        int thisX = this.getPositionX();
+        int thisY = this.getPositionY();
+        int thisWidth = this.getWidth();
+        int thisHeight = this.getHeight();
+
+        // Get the other entity's position and dimensions
+        int entityX = entity.getPositionX();
+        int entityY = entity.getPositionY();
+        int entityWidth = entity.getWidth();
+        int entityHeight = entity.getHeight();
+
+        // Check for overlap between the two rectangles
+        boolean xOverlap = thisX < entityX + entityWidth && thisX + thisWidth > entityX;
+        boolean yOverlap = thisY < entityY + entityHeight && thisY + thisHeight > entityY;
+
+        // Collision occurs if both x and y overlaps are true
+        return xOverlap && yOverlap;
     }
 
     // Prototype design pattern
-    public Projectile clone() {
-        Projectile projectile = new Projectile(getPositionX(), getPositionY(), getDirectionX(), getDirectionY(), getVelocityX(), getVelocityX(), getName());
+    public Projectile clone(int marginX, int marginY) {
+        Projectile projectile = new Projectile(getPositionX()+marginX, getPositionY()+marginY, getDirectionX(), getDirectionY(), getVelocityX(), getVelocityX(), getName());
         projectile.setDamage(damage);
         projectile.setTeamID(teamID);
         return projectile;

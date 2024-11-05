@@ -19,8 +19,12 @@ public class Plant extends EntityActions {
     private List<Observer> observers = new ArrayList<>();
     private State state;
 
-    public Plant(int teamID, int positionX, int positionY, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed) {
-        super(teamID, positionX, positionY, name, description, health, damage, projectile, behavior);
+    public Plant(int teamID, int positionX, int positionY, int width, int height, String name, String description, int health, int damage, Projectile projectile,  EntityBehavior behavior, double averageActionSpeed, int dirX, int dirY, int velX, int velY) {
+        super(teamID, positionX, positionY, width, height, name, description, health, damage, projectile, behavior);
+        setDirectionX(dirX);
+        setDirectionY(dirY);
+        setVelocityX(velX);
+        setVelocityY(velY);
         cooldown = new Cooldown(averageActionSpeed);
         this.state = new InactiveState();
     }
@@ -63,6 +67,12 @@ public class Plant extends EntityActions {
         private int teamID = -1;
         private int positionX;
         private int positionY;
+        private int directionX;
+        private int directionY;
+        private int velocityX;
+        private int velocityY;
+        private int width;
+        private int height;
         private String name = "Model.Plant name";
         private String description = "Model.Plant description";
         private int health = 0;
@@ -80,6 +90,30 @@ public class Plant extends EntityActions {
         }
         public Builder setPositionY(int positionY) {
             this.positionY = positionY;
+            return this;
+        }
+        public Builder setDirectionX(int directionX) {
+            this.directionX = directionX;
+            return this;
+        }
+        public Builder setDirectionY(int directionY) {
+            this.directionY = directionY;
+            return this;
+        }
+        public Builder setVelocityX(int velocityX) {
+            this.velocityX = velocityX;
+            return this;
+        }
+        public Builder setVelocityY(int velocityY) {
+            this.velocityY = velocityY;
+            return this;
+        }
+        public Builder setWidth(int width) {
+            this.width = width;
+            return this;
+        }
+        public Builder setHeight(int height) {
+            this.height = height;
             return this;
         }
         public Builder setName(String name) {
@@ -111,7 +145,7 @@ public class Plant extends EntityActions {
             return this;
         }
         public Plant build() {
-            return new Plant(teamID, positionX, positionY, name, description, health, damage, projectile, behavior, averageActionSpeed);
+            return new Plant(teamID, positionX, positionY, width, height, name, description, health, damage, projectile, behavior, averageActionSpeed, directionX, directionY, velocityX, velocityY);
         }
     }
 
@@ -121,6 +155,8 @@ public class Plant extends EntityActions {
             return (new Builder()
                     .setName("Pea Shooter")
                     .setDescription("Peashooters are your first line of defense. They shoot peas at attacking zombies.")
+                    .setWidth(80)
+                    .setHeight(80)
                     .setHealth(300)
                     .setDamage(20)
                     .setAverageActionSpeed(1.425)
@@ -135,6 +171,8 @@ public class Plant extends EntityActions {
             return (new Builder()
                     .setName("Sunflower")
                     .setDescription("Sunflowers are essential for you to produce extra sun. Try planting as many as you can!")
+                    .setWidth(80)
+                    .setHeight(80)
                     .setHealth(300)
                     .setDamage(0)
                     .setAverageActionSpeed(24.25)
@@ -150,11 +188,32 @@ public class Plant extends EntityActions {
                     .setTeamID(0)
                     .setName("Wall-nut")
                     .setDescription("Wall-nuts have hard shells which you can use to protect your other plants.")
+                    .setWidth(140)
+                    .setHeight(140)
                     .setHealth(4000)
-                    .setDamage(0)
+                    .setDamage(100)
                     .setAverageActionSpeed(0)
+                    .setTeamID(0)
+                    .setProjectile(peaProjectile)
+                    .build());
+        }
+
+        public static Plant constructAdayNut() {
+            Projectile peaProjectile = new Projectile(0, 0, 0, 0, 0, 0, "");
+            return (new Builder()
+                    .setTeamID(0)
+                    .setName("Aday-nut")
+                    .setDescription("Wall-nuts have hard shells which you can use to protect your other plants.")
+                    .setWidth(100)
+                    .setHeight(100)
+                    .setHealth(200)
+                    .setDamage(20)
+                    .setAverageActionSpeed(1)
                     .setTeamID(1)
                     .setProjectile(peaProjectile)
+                    .setDirectionX(-1)
+                    .setVelocityX(5)
+                    .setBehavior(new AttackAndMoveBehavior())
                     .build());
         }
     }   
