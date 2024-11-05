@@ -22,8 +22,9 @@ class AttackAndMoveBehavior implements EntityBehavior {
         projectile.setTeamID(entity.getTeamID());
 
         // Set the projectile's position to the zombie's current position
-
-
+        projectile.setPositionX( entity.getPositionX());
+        projectile.setPositionY( entity.getPositionY());
+        System.out.println(entity.getPositionX() + " y: " + entity.getPositionY() + " || " + projectile.getPositionX() + " y: " + projectile.getPositionY());
 
         // Check if there is an enemy entity nearby for the zombie to attack
         boolean enemyInRange = false;
@@ -39,14 +40,14 @@ class AttackAndMoveBehavior implements EntityBehavior {
 
         if (enemyInRange) {
             // Add the stationary projectile to the game board
-            gameBoard.addProjectile(projectile.clone(entity.getPositionX(), entity.getPositionY()));
+            gameBoard.addProjectile(projectile);
+
             SoundEffect soundEffect = new SoundEffect("/sounds/zombieAttack.wav");
-            soundEffect.setVolume(0.1f);
+            soundEffect.setVolume(1f);
             soundEffect.play();
             return true;
         } else {
             // Move the zombie if no enemy is nearby
-            System.out.println("Moving " + entity.getName() + " to position " + entity.getPositionX());
             entity.updatePosition();
         }
 

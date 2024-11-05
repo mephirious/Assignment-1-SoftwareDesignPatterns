@@ -1,6 +1,7 @@
 package Model;
 
 import View.GamePanel;
+import View.SoundEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,6 @@ public class GameSession {
         long lastTime = System.currentTimeMillis();
         startCommandListener();
 
-
         while (isRunning) {
             if (!isPaused) {
                 long currentTime = System.currentTimeMillis();
@@ -139,7 +139,13 @@ public class GameSession {
 
                     if (!continueGame) {
                         isRunning = false;
-                        GamePanel.endGame("Aday ate your brain!");
+
+                        SoundEffect soundEffect = new SoundEffect("/sounds/win.wav");
+                        soundEffect.setVolume(1f);
+                        soundEffect.play();
+
+                        gameFacade.getGameBoard().clearBoard();
+                        GamePanel.endGame("Aday ate your brain!", this);
                         break;
                     }
                     lastTime = currentTime;

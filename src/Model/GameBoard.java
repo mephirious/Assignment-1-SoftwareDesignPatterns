@@ -192,6 +192,10 @@ public class GameBoard extends Container implements IGameBoard {
 
     }
 
+    public void clearBoard() {
+        this.entities.clear();
+        this.projectiles.clear();
+    }
 
 
 }

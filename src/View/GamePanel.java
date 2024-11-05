@@ -124,11 +124,43 @@ public class GamePanel extends JPanel implements Runnable{
 
     }
 
-    public static void endGame(String message) {
-        // Logic to stop the game, show message, and possibly reset game state
-        JOptionPane.showMessageDialog(null, message, "Game Over", JOptionPane.INFORMATION_MESSAGE);
-        // Optionally: Reset the game or exit
+    public static void endGame(String message, GameSession gameSession) {
+        // Create a panel to add custom buttons
+        JPanel panel = new JPanel();
+        JLabel label = new JLabel(message);
+        panel.add(label);
+
+        // Create a custom button for restarting gameplay
+        JButton restartButton = new JButton("Restart Game");
+        panel.add(restartButton);
+
+        // Define the action for the restart button
+        restartButton.addActionListener(e -> {
+            try {
+                gameSession.startGameplay();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            // Close the dialog after the button is pressed
+            Window window = SwingUtilities.getWindowAncestor(panel);
+            if (window != null) {
+                window.dispose();
+            }
+        });
+
+        // Show the custom dialog with the message and restart button
+        JOptionPane.showOptionDialog(
+                null,
+                panel,
+                "Game Over",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE,
+                null,
+                new Object[]{},  // Empty array for options removes default buttons
+                null
+        );
     }
+
 
     public void removeEntity(EntityActions entity) {
         gameBoard.getEntities().remove(entity); // Assuming entities is a List<EntityActions>
