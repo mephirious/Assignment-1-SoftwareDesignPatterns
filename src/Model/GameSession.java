@@ -23,9 +23,8 @@ public class GameSession {
 
         scheduledCommands = new ArrayList<>();
         // Schedule commands
-        scheduleCommand(10, new AddPeashooterCommand());
-        scheduleCommand(15, new AddWallnutCommand());
-        scheduleCommand(20, new AddSunflowerCommand());
+        scheduleCommand(130, new AddAdaynutCommand());
+        scheduleCommand(300, new AddNursnutCommand());
 
 
         Main.createGUI(this);
@@ -46,7 +45,7 @@ public class GameSession {
     }
 
 
-    private static class ScheduledCommand implements Command{
+    private static class ScheduledCommand implements Command {
         private final int interval;
         private final Command command;
 
@@ -120,40 +119,39 @@ public class GameSession {
 
                     boolean continueGame = gameFacade.update();
 
-//                    // Execute scheduled commands
-//                    for (ScheduledCommand scheduledCommand : scheduledCommands) {
-//                        if (tickNumber % scheduledCommand.getInterval() == 0) {
-//                            // Calculate a random position in the grid
-//                            Random rand = new Random();
-//                            int column = rand.nextInt(9);
-//                            int row = rand.nextInt(5);
-//
-//                            for (int i = 0; i < 1; i++) {
-//                                    // Calculate the x and y positions based on the column and row
-//                                    int x = rand.nextInt(900); // Calculate x position
-//                                    int y = rand.nextInt(600); // Calculate y position
-//                                    scheduledCommand.getCommand().execute(gameFacade.getGameBoard(), x, y);
-//                            }
-//                        }
+                    // Execute scheduled commands
+                    for (ScheduledCommand scheduledCommand : scheduledCommands) {
+                        if (tickNumber % scheduledCommand.getInterval() == 0) {
+                            // Calculate a random position in the grid
+                            Random rand = new Random();
+
+                            for (int i = 0; i < 1; i++) {
+                                // Calculate the x and y positions based on the column and row
+                                int x = 760; // Calculate x position
+                                int y = rand.nextInt(600); // Calculate y position
+                                scheduledCommand.getCommand().execute(gameFacade.getGameBoard(), x, y);
+                            }
+                        }
 //                    }
 
-                    if (!continueGame) {
-                        isRunning = false;
+                        if (!continueGame) {
+                            isRunning = false;
 
-                        SoundEffect soundEffect = new SoundEffect("/sounds/win.wav");
-                        soundEffect.setVolume(1f);
-                        soundEffect.play();
+                            SoundEffect soundEffect = new SoundEffect("/sounds/win.wav");
+                            soundEffect.setVolume(1f);
+                            soundEffect.play();
 
-                        gameFacade.getGameBoard().clearBoard();
-                        GamePanel.endGame("Aday ate your brain!", this);
-                        break;
+                            gameFacade.getGameBoard().clearBoard();
+                            GamePanel.endGame("Aday ate your brain!", this);
+                            break;
+                        }
+                        lastTime = currentTime;
                     }
-                    lastTime = currentTime;
-                }
 
-                long sleepTime = TICK_RATE_MS - (System.currentTimeMillis() - lastTime);
-                if (sleepTime > 0) {
-                    Thread.sleep(sleepTime);
+                    long sleepTime = TICK_RATE_MS - (System.currentTimeMillis() - lastTime);
+                    if (sleepTime > 0) {
+                        Thread.sleep(sleepTime);
+                    }
                 }
             }
         }

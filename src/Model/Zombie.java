@@ -3,12 +3,12 @@ package Model;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ZombieClone implements Cloneable {
+public class Zombie implements Cloneable {
     protected int row;
     private int health;
     private List<Observer> observers = new ArrayList<>();
 
-    public ZombieClone(int health) {
+    public Zombie(int health) {
         this.health = health;
     }
 
@@ -40,12 +40,12 @@ public class ZombieClone implements Cloneable {
     }
 
     @Override
-    protected ZombieClone clone() throws CloneNotSupportedException {
-        return (ZombieClone) super.clone();
+    protected Zombie clone() throws CloneNotSupportedException {
+        return (Zombie) super.clone();
     }
 }
 
-class NormalZombie extends ZombieClone {
+class NormalZombie extends Zombie {
     public NormalZombie(int health) {
         super(health);
     }
@@ -56,7 +56,7 @@ class NormalZombie extends ZombieClone {
     }
 }
 
-class StrongZombie extends ZombieClone {
+class StrongZombie extends Zombie {
     public StrongZombie(int health) {
         super(health);
     }
@@ -67,7 +67,7 @@ class StrongZombie extends ZombieClone {
     }
 }
 
-class BossZombie extends ZombieClone {
+class BossZombie extends Zombie {
     public BossZombie(int health) {
         super(health);
     }

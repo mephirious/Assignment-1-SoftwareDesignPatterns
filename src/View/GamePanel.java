@@ -182,6 +182,7 @@ public class GamePanel extends JPanel implements Runnable{
         Image peaShooterGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/peashooter.gif"));
         Image sunflowerGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sunflower.gif"));
         Image adaynutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/zombie.gif"));
+        Image nursnutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/zombieNurs.gif"));
         Image wallNutGif = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/wallnut.gif"));
         Image peaImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/projectile.gif"));
         Image sunImage = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/sun.gif"));
@@ -219,6 +220,9 @@ public class GamePanel extends JPanel implements Runnable{
                     break;
                 case "Aday-nut":
                     entityImage = adaynutGif;
+                    break;
+                case "Nurs-nut":
+                    entityImage = nursnutGif;
                     break;
             }
 

@@ -3,7 +3,7 @@ package Model;
 public class AddAdaynutCommand implements Command {
     @Override
     public void execute(GameBoard gameBoard, int x, int y) {
-        Plant wallnut = Plant.Director.constructAdayNut();
+        ZombieVerse wallnut = ZombieVerse.Director.constructAdayNut();
         wallnut.setPositionX(x);
         wallnut.setPositionY(y);
         wallnut.getProjectile().setPositionX(x);
@@ -13,3 +13,4 @@ public class AddAdaynutCommand implements Command {
         }
     }
 }
+
