@@ -13,6 +13,7 @@ This project is an end-term assignment for our Software Design Patterns course, 
 
 The project is organized as follows:
 
+```bash
 ├───.idea
 │   └───inspectionProfiles
 ├───out
@@ -27,6 +28,7 @@ The project is organized as follows:
 ├───Model
 ├───sounds
 └───View
+```
 
 
 - **.idea/**: Contains configuration files for the IDE.
