@@ -80,14 +80,11 @@ class AttackBehavior implements EntityBehavior {
     }
 
     private boolean isEnemyInForwardDirection(Projectile projectile, Entity enemy) {
-        double projectileDirectionX = projectile.getVelocityX();
-        double projectileDirectionY = projectile.getVelocityY();
-
         double enemyX = enemy.getPositionX() - projectile.getPositionX();
         double enemyY = enemy.getPositionY() - projectile.getPositionY();
 
         // Calculate the dot product to check if the enemy is in the forward direction
-        double dotProduct = (projectileDirectionX * enemyX) + (projectileDirectionY * enemyY);
+        double dotProduct = (projectile.getDirectionX() * enemyX) + (projectile.getDirectionY() * enemyY);
 
         // The dot product should be positive if the enemy is in the forward direction
         return dotProduct > 0;
